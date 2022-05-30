@@ -43,9 +43,6 @@ public class UserInfo implements Serializable {
 	@Column(name = "avatar_img")
 	private String avatarImg;
 	
-	@Column(name = "story")
-	private String story;
-	
 	@OneToOne(fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn
 	private AppUser appUser;
