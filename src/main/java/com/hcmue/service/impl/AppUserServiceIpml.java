@@ -227,7 +227,6 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 				userInfoDto.setAvatarImg(user.getUserInfo().getAvatarImg().contains(FileConstant.TEMP_PROFILE_IMAGE_BASE_URL)
 						? user.getUserInfo().getAvatarImg()
 						: AppUtils.createLinkOnCurrentHttpServletRequest(user.getUserInfo().getAvatarImg()));
-				userInfoDto.setStory(user.getUserInfo().getStory());
 			}
 
 			return new AppServiceResult<UserInfoDtoRes>(true, 0, "Success", userInfoDto);
@@ -257,7 +256,6 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 				user.setEmail(userInfo.getEmail());
 				user.getUserInfo().setFirstName(userInfo.getFirstName());
 				user.getUserInfo().setLastName(userInfo.getLastName());
-				user.getUserInfo().setStory(userInfo.getStory());
 
 				user.getUserInfo().setUserEdit(currentUsername);
 
