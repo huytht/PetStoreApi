@@ -41,6 +41,9 @@ public class PetProduct implements Serializable {
 	@Column(name = "description")
 	private String description;
 	
+	@Column(name = "image_path")
+	private String imagePath;
+	
 	@Column(name = "status")
 	private Boolean status;
 

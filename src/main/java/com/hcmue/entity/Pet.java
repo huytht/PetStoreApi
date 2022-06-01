@@ -1,6 +1,8 @@
 package com.hcmue.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -37,9 +41,6 @@ public class Pet implements Serializable {
 	
 	@Column(name = "amount")
 	private Long amount;
-
-	@Column(name = "origin")
-	private String origin;
 	
 	@Column(name = "description")
 	private String description;
@@ -52,6 +53,11 @@ public class Pet implements Serializable {
 	
 	@Column(name = "status")
 	private Boolean status;
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinTable(name = "pet_origin", joinColumns = { @JoinColumn(name = "pet_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "origin_id") })
+	private Set<Origin> origins = new HashSet<>();
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
