@@ -5,25 +5,39 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hcmue.constant.AppError;
 import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.product.PetProductDto;
+import com.hcmue.dto.product.ProductCreate;
+import com.hcmue.entity.Category;
 import com.hcmue.entity.PetProduct;
 import com.hcmue.provider.file.FileService;
+import com.hcmue.provider.file.FileServiceFactory;
+import com.hcmue.provider.file.FileType;
+import com.hcmue.provider.file.MediaFile;
+import com.hcmue.provider.file.UnsupportedFileTypeException;
+import com.hcmue.repository.CategoryRepository;
 import com.hcmue.repository.PetProductRepository;
 import com.hcmue.service.PetProductService;
 
+@Service
 public class PetProductServiceImpl implements PetProductService{
 
 	private final Logger logger = LoggerFactory.getLogger(PetProductServiceImpl.class);
 	
 	
 	private PetProductRepository petProductRepository;
+	private CategoryRepository categoryRepository;
 	private FileService imageFileService;
 	
-	public PetProductServiceImpl(PetProductRepository petProductRepository, FileService imageFileService) {
+	@Autowired
+	public PetProductServiceImpl(PetProductRepository petProductRepository, CategoryRepository categoryRepository) {
 		this.petProductRepository = petProductRepository;
-		this.imageFileService = imageFileService;
+		this.categoryRepository = categoryRepository;
+		this.imageFileService = FileServiceFactory.getFileService(FileType.IMAGE);
 	}
 
 	@Override
@@ -57,6 +71,58 @@ public class PetProductServiceImpl implements PetProductService{
 			e.printStackTrace();
 			return new AppServiceResult<PetProductDto>(false, AppError.Unknown.errorCode(),
 					AppError.Unknown.errorMessage(), null);
+		}
+	}
+	
+	@Override
+	public AppServiceResult<PetProductDto> addPetProduct(ProductCreate product) throws UnsupportedFileTypeException {
+		
+		try {
+			PetProduct newProduct = new PetProduct();
+			
+			newProduct.setName(product.getName());
+			
+			if (product.getCategoryId() != null) {
+				Category category = categoryRepository.findById(product.getCategoryId()).orElse(null);
+				
+				if (category == null) {
+					logger.warn("Category Id: " + product.getCategoryId() + " is not exist!");
+					
+					return new AppServiceResult<PetProductDto>(false, AppError.Validattion.errorCode(),
+							"Category Id: " + product.getCategoryId() + " is not exist!", null);
+				} else
+					newProduct.setCategory(category);
+			}
+			
+			newProduct.setAmount(product.getAmount());
+			newProduct.setDescription(product.getDescription());
+			newProduct.setStatus(product.getStatus());
+			
+			if (product.getImageFile() != null) {
+				MediaFile mediaFile = imageFileService.upload(newProduct.getName(), product.getImageFile());
+				newProduct.setImagePath(mediaFile.getPathUrl());
+			}
+			
+			petProductRepository.save(newProduct);
+			
+			final PetProductDto dto = PetProductDto.CreateFromEntity(newProduct);
+			
+			
+			return new AppServiceResult<PetProductDto>(true, 0, "Succeed!", dto);
+			
+		} catch (UnsupportedFileTypeException e) {
+			e.printStackTrace();
+
+			throw e;
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+
+			return new AppServiceResult<PetProductDto>(false, AppError.Validattion.errorCode(), e.getMessage(), null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return new AppServiceResult<PetProductDto>(false, AppError.Unknown.errorCode(), AppError.Unknown.errorMessage(),
+					null);
 		}
 	}
 
