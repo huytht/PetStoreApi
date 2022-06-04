@@ -3,8 +3,8 @@ package com.hcmue.dto.product;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hcmue.dto.breed.BreedDto;
 import com.hcmue.dto.origin.OriginDto;
-import com.hcmue.entity.Breed;
 import com.hcmue.entity.Origin;
 import com.hcmue.entity.Pet;
 
@@ -35,7 +35,7 @@ public class PetDto {
 	
 	private Boolean status;
 
-	private Breed breed;
+	private BreedDto breed;
 	
 	public static PetDto CreateFromEntity(Pet src) {
 		PetDto petDto = new PetDto();
@@ -51,7 +51,7 @@ public class PetDto {
 		petDto.imagePath = src.getImagePath();
 		petDto.status = src.getStatus();
 		petDto.gender = src.getStatus();
-		petDto.breed = src.getBreed();
+		petDto.breed = BreedDto.CreateFromEntity(src.getBreed());
 
 		return petDto;
 	}

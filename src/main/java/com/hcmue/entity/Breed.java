@@ -23,7 +23,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "pet")
+@Table(name = "breed")
 public class Breed implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
