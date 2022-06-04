@@ -19,20 +19,8 @@ public class SecurityConstant {
 			"/user/login", "/user/verify/**", "/user/image/profile/**", "/user/image/**" ,"/user/image/**/**", "/user/reset-password/**"};
 	
 	public final static String[] PUBLIC_GET_URLS = {
-//			"/genre",
-//			"/myfile/images/**",
-//			"/myfile/tracks/**",
-//			"/common/**",
-//			"/track/listened/**",
-//			"/track/single/**",
-//			"/track/search/**",
-//			"/track/search-text",
-//			"/track/top-hit",
-//			"/album/search/**",
-//			"/myfile/dowload/**",
-//			"/playlist/category",
-//			"/playlist/single/**",
-//			"/singer/**"
+			"/pet/**",
+			"/myfile/images/**",
 	};
 	
 	public final static String[] REQUIRE_ADMIN_ROLE_URLS = {
