@@ -21,7 +21,7 @@ public class ProductCreate {
 	private String description;
 
 	@NotEmpty
-	private MultipartFile imageFile;
+	private MultipartFile[] imageFile;
 	
 	private Boolean gender;
 	
@@ -33,7 +33,7 @@ public class ProductCreate {
 	
 	private Long categoryId;
 
-	public ProductCreate(String name, Long amount, String description, @NotEmpty MultipartFile imageFile,
+	public ProductCreate(String name, Long amount, String description, @NotEmpty MultipartFile[] imageFile,
 			Boolean gender, Boolean status, Long breedId, Long[] originIds) {
 		this.name = name;
 		this.amount = amount;
@@ -45,7 +45,7 @@ public class ProductCreate {
 		this.originIds = originIds;
 	}
 
-	public ProductCreate(String name, Long amount, String description, @NotEmpty MultipartFile imageFile,
+	public ProductCreate(String name, Long amount, String description, @NotEmpty MultipartFile[] imageFile,
 			Boolean status, Long categoryId) {
 		this.name = name;
 		this.amount = amount;

@@ -6,7 +6,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hcmue.provider.file.MediaFile;
 import com.hcmue.provider.file.UnsupportedFileTypeException;
@@ -14,11 +16,14 @@ import com.hcmue.provider.file.FileServiceFactory;
 import com.hcmue.provider.file.FileType;
 import com.hcmue.constant.AppError;
 import com.hcmue.domain.AppServiceResult;
+import com.hcmue.dto.pagination.PageDto;
+import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.PetDto;
 import com.hcmue.dto.product.ProductCreate;
 import com.hcmue.entity.Breed;
 import com.hcmue.entity.Origin;
 import com.hcmue.entity.Pet;
+import com.hcmue.entity.ProductImages;
 import com.hcmue.provider.file.FileService;
 import com.hcmue.repository.BreedRepository;
 import com.hcmue.repository.OriginRepository;
@@ -102,8 +107,13 @@ public class PetServiceImpl implements PetService{
 			newPet.setStatus(pet.getStatus());
 			
 			if (pet.getImageFile() != null) {
-				MediaFile mediaFile = imageFileService.upload(newPet.getName(), pet.getImageFile());
-				newPet.setImagePath(mediaFile.getPathUrl());
+				for (MultipartFile file : pet.getImageFile()) {
+					MediaFile mediaFile = imageFileService.upload(newPet.getName(), file);
+					ProductImages productImages = new ProductImages();
+					productImages.setImagePath(mediaFile.getPathUrl());
+					productImages.setPet(newPet);
+					newPet.getPetImages().add(productImages);
+				}
 			}
 			
 			for (Long originId : pet.getOriginIds()) {
@@ -136,6 +146,23 @@ public class PetServiceImpl implements PetService{
 			logger.error(e.getMessage());
 			return new AppServiceResult<PetDto>(false, AppError.Unknown.errorCode(), AppError.Unknown.errorMessage(),
 					null);
+		}
+	}
+
+	@Override
+	public AppServiceResult<PageDto<PetDto>> getPetListByType(String typeOfPet, PageParam pageParam) {
+		try {
+			Page<Pet> pets = typeOfPet.equalsIgnoreCase("new") 
+							? petRepository.findAllByOrderByIdDesc(pageParam.getPageable()) 
+							: petRepository.findAll(pageParam.getPageable());
+			Page<PetDto> dtoPage = pets.map(item -> PetDto.CreateFromEntity(item));
+			
+			return new AppServiceResult<PageDto<PetDto>>(true, 0, "Succeed!", new PageDto<PetDto>(dtoPage));
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return new AppServiceResult<PageDto<PetDto>>(false, AppError.Unknown.errorCode(),
+					AppError.Unknown.errorMessage(), null);
 		}
 	}
 

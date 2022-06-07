@@ -56,7 +56,7 @@ public class PetProductController {
 	public ResponseEntity<HttpResponse> addPetProduct(@RequestParam(value = "name") String name,
 			@RequestParam(value = "amount") Long amount,
 			@RequestParam(value = "description") String description,
-			@RequestParam(value = "imageFile") MultipartFile imageFile,
+			@RequestParam(value = "imageFiles") MultipartFile[] imageFile,
 			@RequestParam(value = "status") Boolean status,
 			@RequestParam(value = "categoryId") Long categoryId)
 			throws UnsupportedFileTypeException {

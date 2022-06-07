@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hcmue.constant.AppError;
 import com.hcmue.domain.AppServiceResult;
@@ -14,6 +15,7 @@ import com.hcmue.dto.product.PetProductDto;
 import com.hcmue.dto.product.ProductCreate;
 import com.hcmue.entity.Category;
 import com.hcmue.entity.PetProduct;
+import com.hcmue.entity.ProductImages;
 import com.hcmue.provider.file.FileService;
 import com.hcmue.provider.file.FileServiceFactory;
 import com.hcmue.provider.file.FileType;
@@ -99,8 +101,13 @@ public class PetProductServiceImpl implements PetProductService{
 			newProduct.setStatus(product.getStatus());
 			
 			if (product.getImageFile() != null) {
-				MediaFile mediaFile = imageFileService.upload(newProduct.getName(), product.getImageFile());
-				newProduct.setImagePath(mediaFile.getPathUrl());
+				for (MultipartFile file : product.getImageFile()) {
+					MediaFile mediaFile = imageFileService.upload(newProduct.getName(), file);
+					ProductImages productImages = new ProductImages();
+					productImages.setImagePath(mediaFile.getPathUrl());
+					productImages.setProduct(newProduct);
+					newProduct.getProductImages().add(productImages);
+				}
 			}
 			
 			petProductRepository.save(newProduct);

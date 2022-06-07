@@ -2,6 +2,7 @@ package com.hcmue.entity;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -15,7 +16,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.search.annotations.ContainedIn;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,9 +49,6 @@ public class Pet implements Serializable {
 	@Column(name = "description")
 	private String description;
 
-	@Column(name = "image_path")
-	private String imagePath;
-	
 	@Column(name = "gender")
 	private Boolean gender;
 	
@@ -63,6 +64,9 @@ public class Pet implements Serializable {
 			CascadeType.REFRESH })
 	@JoinColumn(name = "breed_id", nullable = true)
 	private Breed breed;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pet", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	private Set<ProductImages> petImages = new HashSet<>();
 	
 
 }

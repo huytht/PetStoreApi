@@ -7,6 +7,7 @@ import com.hcmue.dto.breed.BreedDto;
 import com.hcmue.dto.origin.OriginDto;
 import com.hcmue.entity.Origin;
 import com.hcmue.entity.Pet;
+import com.hcmue.entity.ProductImages;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +30,7 @@ public class PetDto {
 	
 	private String description;
 
-	private String imagePath;
+	private List<String> imagePath = new ArrayList<String>();
 	
 	private Boolean gender;
 	
@@ -48,7 +49,11 @@ public class PetDto {
 				petDto.origins.add(OriginDto.CreateFromEntity(origin));
 			}
 		petDto.description = src.getDescription();
-		petDto.imagePath = src.getImagePath();
+
+		if (src.getPetImages() != null) 
+			for (ProductImages image : src.getPetImages()) {
+				petDto.imagePath.add(image.getImagePath());
+			}
 		petDto.status = src.getStatus();
 		petDto.gender = src.getStatus();
 		petDto.breed = BreedDto.CreateFromEntity(src.getBreed());
