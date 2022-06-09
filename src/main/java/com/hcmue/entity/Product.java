@@ -1,6 +1,7 @@
 package com.hcmue.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,6 +55,9 @@ public class Product implements Serializable {
 	
 	@Column(name = "status")
 	private Boolean status;
+	
+	@Column(name = "price")
+	private BigDecimal price;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "pet_origin", joinColumns = { @JoinColumn(name = "pet_id") }, inverseJoinColumns = {

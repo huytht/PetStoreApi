@@ -1,5 +1,7 @@
 package com.hcmue.controller;
 
+import java.math.BigDecimal;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hcmue.provider.file.UnsupportedFileTypeException;
-import com.hcmue.constant.AppConstant;
 import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.HttpResponse;
 import com.hcmue.dto.HttpResponseError;
@@ -73,11 +74,12 @@ public class ProductController {
 			@RequestParam(value = "status") Boolean status,
 			@RequestParam(value = "breedId", required = false) Long breedId,
 			@RequestParam(value = "categoryId") Long categoryId,
+			@RequestParam(value = "price") BigDecimal price,
 			@RequestParam(value = "age", required = false) Integer age,
 			@RequestParam(value = "originIds", required = false) Long[] originIds)
 			throws UnsupportedFileTypeException {
 
-		ProductCreate newProduct = new ProductCreate(name, amount, description, imageFile, gender, age, status, breedId, originIds, categoryId);
+		ProductCreate newProduct = new ProductCreate(name, amount, description, imageFile, gender, age, status, breedId, originIds, categoryId, price);
 
 		AppServiceResult<ProductDto> result = productService.addProduct(newProduct);
 

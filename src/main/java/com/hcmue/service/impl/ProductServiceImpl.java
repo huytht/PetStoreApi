@@ -119,6 +119,7 @@ public class ProductServiceImpl implements ProductService{
 			}
 			
 			newProduct.setAmount(product.getAmount());
+			newProduct.setPrice(product.getPrice());
 			newProduct.setDescription(product.getDescription());
 			
 			if (product.getGender() != null)

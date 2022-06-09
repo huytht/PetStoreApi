@@ -1,5 +1,6 @@
 package com.hcmue.dto.product;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class ProductDto {
 	
 	private Boolean gender;
 	
+	private BigDecimal price;
+	
 	private Boolean status;
 
 	private BreedDto breed;
@@ -61,6 +64,8 @@ public class ProductDto {
 			}
 		
 		petDto.status = src.getStatus();
+		
+		petDto.price = src.getPrice();
 		
 		if (src.getAge() != null)
 			petDto.age = src.getAge();
