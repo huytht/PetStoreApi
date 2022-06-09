@@ -40,13 +40,8 @@ public class ProductImages implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
-	@JoinColumn(name = "pet_id", nullable = true)
-	private Pet pet;
-	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-			CascadeType.REFRESH })
 	@JoinColumn(name = "product_id", nullable = true)
-	private PetProduct product;
+	private Product product;
 	
 	@Column(name = "image_path")
 	private String imagePath;

@@ -12,14 +12,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OriginDto {
 
-	private Long id;
-
 	private String name;
 
 	public static OriginDto CreateFromEntity(Origin src) {
 		OriginDto dto = new OriginDto();
 
-		dto.id = src.getId();
 		dto.name = src.getName();
 
 		return dto;

@@ -34,11 +34,6 @@ public class Breed implements Serializable {
 
 	@Column(name = "name")
 	private String name;
-
-	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-			CascadeType.REFRESH })
-	@JoinColumn(name = "category_id", nullable = true)
-	private Category category;
 	
 
 }

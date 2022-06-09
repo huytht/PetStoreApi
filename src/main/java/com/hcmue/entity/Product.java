@@ -2,7 +2,6 @@ package com.hcmue.entity;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -19,8 +18,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.search.annotations.ContainedIn;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,8 +28,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "pet")
-public class Pet implements Serializable {
+@Table(name = "product")
+public class Product implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -42,6 +39,9 @@ public class Pet implements Serializable {
 
 	@Column(name = "name")
 	private String name;
+	
+	@Column(name = "age")
+	private Integer age;
 	
 	@Column(name = "amount")
 	private Long amount;
@@ -65,8 +65,13 @@ public class Pet implements Serializable {
 	@JoinColumn(name = "breed_id", nullable = true)
 	private Breed breed;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pet", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	private Set<ProductImages> petImages = new HashSet<>();
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+			CascadeType.REFRESH })
+	@JoinColumn(name = "category_id", nullable = true)
+	private Category category;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	private Set<ProductImages> productImages = new HashSet<>();
 	
 
 }

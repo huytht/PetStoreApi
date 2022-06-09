@@ -19,7 +19,7 @@ public class SecurityConstant {
 			"/user/login", "/user/verify/**", "/user/image/profile/**", "/user/image/**" ,"/user/image/**/**", "/user/reset-password/**"};
 	
 	public final static String[] PUBLIC_GET_URLS = {
-			"/pet/**",
+			"/product/**",
 			"/myfile/images/**",
 	};
 	

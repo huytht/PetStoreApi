@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hcmue.dto.breed.BreedDto;
+import com.hcmue.dto.category.CategoryDto;
 import com.hcmue.dto.origin.OriginDto;
 import com.hcmue.entity.Origin;
-import com.hcmue.entity.Pet;
+import com.hcmue.entity.Product;
 import com.hcmue.entity.ProductImages;
 
 import lombok.AllArgsConstructor;
@@ -18,11 +19,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PetDto {
+public class ProductDto {
 	
 	private Long id;
 
 	private String name;
+	
+	private Integer age;
 	
 	private Long amount;
 
@@ -38,8 +41,10 @@ public class PetDto {
 
 	private BreedDto breed;
 	
-	public static PetDto CreateFromEntity(Pet src) {
-		PetDto petDto = new PetDto();
+	private CategoryDto category;
+	
+	public static ProductDto CreateFromEntity(Product src) {
+		ProductDto petDto = new ProductDto();
 
 		petDto.id = src.getId();
 		petDto.name = src.getName();
@@ -50,13 +55,23 @@ public class PetDto {
 			}
 		petDto.description = src.getDescription();
 
-		if (src.getPetImages() != null) 
-			for (ProductImages image : src.getPetImages()) {
+		if (src.getProductImages() != null) 
+			for (ProductImages image : src.getProductImages()) {
 				petDto.imagePath.add(image.getImagePath());
 			}
+		
 		petDto.status = src.getStatus();
-		petDto.gender = src.getStatus();
-		petDto.breed = BreedDto.CreateFromEntity(src.getBreed());
+		
+		if (src.getAge() != null)
+			petDto.age = src.getAge();
+		
+		if (src.getGender() != null) 
+			petDto.gender = src.getGender();
+		
+		if (src.getBreed() != null)
+			petDto.breed = BreedDto.CreateFromEntity(src.getBreed());
+		
+		petDto.category = CategoryDto.CreateFromEntity(src.getCategory());
 
 		return petDto;
 	}

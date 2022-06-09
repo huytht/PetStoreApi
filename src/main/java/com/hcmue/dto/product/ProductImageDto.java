@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hcmue.dto.breed.BreedDto;
 import com.hcmue.dto.origin.OriginDto;
 import com.hcmue.entity.Origin;
-import com.hcmue.entity.Pet;
+import com.hcmue.entity.Product;
 import com.hcmue.entity.ProductImages;
 
 import lombok.AllArgsConstructor;
@@ -23,18 +23,13 @@ public class ProductImageDto {
 	
 	private String imagePath;
 	
-	private PetDto petDto;
-	
-	private PetProductDto petProductDto;
+	private ProductDto productDto;
 	
 	public static ProductImageDto CreateFromEntity(ProductImages src) {
 		ProductImageDto dto = new ProductImageDto();
 
-		if (src.getPet() != null)
-			dto.petDto = PetDto.CreateFromEntity(src.getPet());
-
 		if (src.getProduct() != null) 
-			dto.petProductDto = PetProductDto.CreateFromEntity(src.getProduct());
+			dto.productDto = ProductDto.CreateFromEntity(src.getProduct());
 		
 		dto.imagePath = src.getImagePath();
 		

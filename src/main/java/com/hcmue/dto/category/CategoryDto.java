@@ -12,8 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CategoryDto {
 
-	private Long id;
-
 	private String name;
 
 	private String description;
@@ -21,7 +19,6 @@ public class CategoryDto {
 	public static CategoryDto CreateFromEntity(Category src) {
 		CategoryDto dto = new CategoryDto();
 
-		dto.id = src.getId();
 		dto.name = src.getName();
 		dto.description = src.getDescription();
 
