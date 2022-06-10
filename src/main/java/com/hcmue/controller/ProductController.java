@@ -38,7 +38,7 @@ public class ProductController {
 	@GetMapping
 	public ResponseEntity<HttpResponse> getProductListByType(@RequestParam(name="type") String type,
 			@RequestParam(name = "breed-id", required = false, defaultValue = "0") Long breedId,
-			@RequestParam(name = "category-id", required = false, defaultValue = "0") Long categoryId,
+			@RequestParam(name = "category-id", required = false, defaultValue = "-1") Long categoryId,
 			@RequestParam(name = "page-number", required = false, defaultValue = "0") int pageNumber,
 			@RequestParam(name = "page-size", required = false, defaultValue = "30") int pageSize) {
 		
@@ -47,8 +47,8 @@ public class ProductController {
 		pageParam.setPageSize(pageSize);
 		
 		AppServiceResult<PageDto<ProductDto>> result = breedId != 0
-				? productService.getPetListByBreed(type, breedId, pageParam) 
-				: categoryId != 0
+				? productService.getPetListByBreed(type, breedId, pageParam)
+				: categoryId != -1
 				? productService.getProductListByCategory(type, categoryId, pageParam) 
 				: productService.getProductListByType(type, pageParam);
 

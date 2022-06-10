@@ -59,6 +59,9 @@ public class Product implements Serializable {
 	@Column(name = "price")
 	private BigDecimal price;
 	
+	@Column(name = "rate")
+	private Integer rate;
+	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "pet_origin", joinColumns = { @JoinColumn(name = "pet_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "origin_id") })

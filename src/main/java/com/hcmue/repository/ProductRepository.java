@@ -1,8 +1,12 @@
 package com.hcmue.repository;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.hcmue.entity.Product;
@@ -20,4 +24,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	public Page<Product> findAllByCategoryId(Long categoryId, Pageable pageable);
 	
 	public Page<Product> findAllByCategoryIdOrderByIdDesc(Long categoryId, Pageable pageable);
+	
+	@Transactional
+	@Query(value = "SELECT p FROM Product p WHERE p.category.id > 2")
+	public Page<Product>findAllProductExceptPet(Pageable pageable);
 }

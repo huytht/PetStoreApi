@@ -210,8 +210,10 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public AppServiceResult<PageDto<ProductDto>> getProductListByCategory(String typeOfProduct, Long categoryId, PageParam pageParam) {
 		try {
-			Page<Product> products = typeOfProduct.equalsIgnoreCase(AppConstant.PRODUCT_NEW) 
-									? productRepository.findAllByCategoryIdOrderByIdDesc(categoryId, pageParam.getPageable()) 
+			Page<Product> products = typeOfProduct.equalsIgnoreCase(AppConstant.PRODUCT_NEW) && categoryId != 0
+									? productRepository.findAllByCategoryIdOrderByIdDesc(categoryId, pageParam.getPageable())
+									: categoryId == 0
+									? productRepository.findAllProductExceptPet(pageParam.getPageable())
 									: productRepository.findAllByCategoryId(categoryId, pageParam.getPageable());
 			Page<ProductDto> dtoPage = products.map(item -> ProductDto.CreateFromEntity(item));
 			
