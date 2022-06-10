@@ -13,11 +13,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BreedDto {
 
+	private Long id;
+	
 	private String name;
 
 	public static BreedDto CreateFromEntity(Breed src) {
 		BreedDto dto = new BreedDto();
 
+		dto.id = src.getId();
 		dto.name = src.getName();
 
 		return dto;
