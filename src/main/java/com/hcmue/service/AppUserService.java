@@ -11,6 +11,7 @@ import com.hcmue.domain.AppBaseResult;
 import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.user.AppUserForAdminDto;
 import com.hcmue.dto.user.ChangePassword;
+import com.hcmue.dto.user.RemarkProduct;
 import com.hcmue.dto.user.UserRegister;
 import com.hcmue.dto.user.UserStatus;
 import com.hcmue.dto.userinfo.UserInfoDtoReq;
@@ -32,6 +33,8 @@ public interface AppUserService {
 	AppBaseResult changePassword(ChangePassword changePassword);
 	
 	AppBaseResult resetPassword(String email);
+	
+	AppBaseResult saveRemark(RemarkProduct remarkProduct);
 	
 	UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 	

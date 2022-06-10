@@ -30,12 +30,16 @@ import com.hcmue.domain.AppServiceResult;
 import com.hcmue.domain.AppUserDomain;
 import com.hcmue.dto.user.AppUserForAdminDto;
 import com.hcmue.dto.user.ChangePassword;
+import com.hcmue.dto.user.RemarkProduct;
 import com.hcmue.dto.user.UserRegister;
 import com.hcmue.dto.user.UserStatus;
 import com.hcmue.dto.userinfo.UserInfoDtoReq;
 import com.hcmue.dto.userinfo.UserInfoDtoRes;
 import com.hcmue.entity.AppRole;
 import com.hcmue.entity.AppUser;
+import com.hcmue.entity.AppUserProduct;
+import com.hcmue.entity.AppUserProductId;
+import com.hcmue.entity.Product;
 import com.hcmue.entity.UserInfo;
 import com.hcmue.entity.VerificationToken;
 import com.hcmue.provider.file.FileServiceFactory;
@@ -44,7 +48,9 @@ import com.hcmue.provider.file.FileService;
 import com.hcmue.provider.file.MediaFile;
 import com.hcmue.provider.file.UnsupportedFileTypeException;
 import com.hcmue.repository.AppRoleRepository;
+import com.hcmue.repository.AppUserProductRepository;
 import com.hcmue.repository.AppUserRepository;
+import com.hcmue.repository.ProductRepository;
 import com.hcmue.repository.VerificationTokenRepository;
 import com.hcmue.service.AppUserService;
 import com.hcmue.service.AppMailService;
@@ -70,19 +76,25 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 	private AppMailService appMailService;
 
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	private ProductRepository productRepository;
+	
+	private AppUserProductRepository userProductRepository;
 
 	private FileService imageFileService;
 
 	@Autowired
 	public AppUserServiceIpml(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository,
 			VerificationTokenRepository verificationTokenRepository, AppMailService appMailService,
-			BCryptPasswordEncoder bCryptPasswordEncoder) {
+			BCryptPasswordEncoder bCryptPasswordEncoder, ProductRepository productRepository, 
+			AppUserProductRepository userProductRepository) {
 		this.appUserRepository = appUserRepository;
 		this.verificationTokenRepository = verificationTokenRepository;
 		this.appRoleRepository = appRoleRepository;
 		this.appMailService = appMailService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-
+		this.productRepository = productRepository;
+		this.userProductRepository = userProductRepository;
 		this.imageFileService = FileServiceFactory.getFileService(FileType.IMAGE);
 	}
 	
@@ -400,6 +412,43 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 			user.setEnabled(userStatus.getIsActive());
 			appUserRepository.save(user);
 
+			return AppBaseResult.GenarateIsSucceed();
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return AppBaseResult.GenarateIsFailed(AppError.Unknown.errorCode(), AppError.Unknown.errorMessage());
+		}
+	}
+
+	@Override
+	public AppBaseResult saveRemark(RemarkProduct remarkProduct) {
+		try {
+			AppUser appUser = appUserRepository.findByUsername(AppUtils.getCurrentUsername());
+			if (appUser == null) {
+				logger.warn("Not logged in!");
+
+				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(), "Not logged in!");
+			}
+			
+			Product product = productRepository.findById(remarkProduct.getProductId()).orElse(null);
+			
+			if (product == null) {
+				logger.warn("Product Id is not exist: " + remarkProduct.getProductId() + ", Cannot further process!");
+
+				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
+						"Product Id is not exist: " + remarkProduct.getProductId());
+			}
+			
+			AppUserProduct newRemark = new AppUserProduct();
+			newRemark.setAppUser(appUser);
+			newRemark.setProduct(product);
+			newRemark.setAppUserProductId(new AppUserProductId(appUser.getId(), product.getId()));
+			newRemark.setRate(remarkProduct.getRate());
+			newRemark.setFavourite(remarkProduct.getFavourite());
+			newRemark.setRemark(remarkProduct.getRemark());
+			
+			userProductRepository.save(newRemark);
+			
 			return AppBaseResult.GenarateIsSucceed();
 		} catch (Exception e) {
 			e.printStackTrace();

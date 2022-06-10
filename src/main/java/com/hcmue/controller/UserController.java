@@ -38,6 +38,7 @@ import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.user.AppUserForAdminDto;
 import com.hcmue.dto.user.ChangePassword;
+import com.hcmue.dto.user.RemarkProduct;
 import com.hcmue.dto.user.UserLogin;
 import com.hcmue.dto.user.UserLoginRes;
 import com.hcmue.dto.user.UserRegister;
@@ -198,6 +199,15 @@ public class UserController {
 //		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<String>("Succeed!"))
 //				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 //	}
+	
+	@PostMapping("/remark")
+	public ResponseEntity<HttpResponse> saveRemark(@Valid @RequestBody RemarkProduct dto) {
+
+		AppBaseResult result = appUserService.saveRemark(dto);
+
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<String>("Succeed!"))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
 	
 	@PostMapping("/update-status")
 	public ResponseEntity<HttpResponse> updateStatus(@Valid @RequestBody UserStatus userStatus) {
