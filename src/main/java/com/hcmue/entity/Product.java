@@ -19,6 +19,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.Store;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +36,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Indexed
 @Table(name = "product")
 public class Product implements Serializable {
 	
@@ -38,6 +46,7 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
 	@Column(name = "name")
 	private String name;
 	
@@ -67,6 +76,7 @@ public class Product implements Serializable {
 			@JoinColumn(name = "origin_id") })
 	private Set<Origin> origins = new HashSet<>();
 
+	@IndexedEmbedded
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
 	@JoinColumn(name = "breed_id", nullable = true)

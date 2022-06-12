@@ -52,13 +52,13 @@ public class ProductDto {
 		petDto.id = src.getId();
 		petDto.name = src.getName();
 		petDto.amount = src.getAmount();
-		if (src.getOrigins() != null)
+		if (!src.getOrigins().isEmpty())
 			for (Origin origin : src.getOrigins()) {
 				petDto.origins.add(OriginDto.CreateFromEntity(origin));
 			}
 		petDto.description = src.getDescription();
 
-		if (src.getProductImages() != null) 
+		if (!src.getProductImages().isEmpty()) 
 			for (ProductImages image : src.getProductImages()) {
 				petDto.imagePath.add(image.getImagePath());
 			}

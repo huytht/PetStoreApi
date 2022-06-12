@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hcmue.provider.file.UnsupportedFileTypeException;
+import com.hcmue.domain.FullTextSearchWithPagingParam;
+import com.hcmue.util.StringUtil;
 import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.HttpResponse;
 import com.hcmue.dto.HttpResponseError;
@@ -21,6 +23,7 @@ import com.hcmue.dto.HttpResponseSuccess;
 import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductDto;
+import com.hcmue.dto.product.ProductShortDto;
 import com.hcmue.dto.user.RemarkProduct;
 import com.hcmue.dto.product.ProductCreate;
 import com.hcmue.service.ProductService;
@@ -100,6 +103,23 @@ public class ProductController {
 		AppServiceResult<PageDto<RemarkProduct>> result = productService.getRemarkListByProduct(productId, pageParam);
 
 		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<PageDto<RemarkProduct>>(result.getData()))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
+	
+	@GetMapping(path = "/search-text")
+	public ResponseEntity<HttpResponse> searchText(@RequestParam(value = "text", required = true) String text, 
+				@RequestParam(value = "pageIndex", required = false) Integer pageIndex) {
+		
+		if(StringUtil.isBlank(text))
+			return ResponseEntity.badRequest().body(new HttpResponseError(null, "Text search is not empty"));
+			
+		FullTextSearchWithPagingParam params = new FullTextSearchWithPagingParam();
+		params.getPageParam().setPageIndex(pageIndex == null ? 0 : pageIndex);
+		params.setText(text);
+		
+		AppServiceResult<PageDto<ProductShortDto>> result = productService.searchByFTS(params);
+
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<PageDto<ProductShortDto>>(result.getData()))
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
 

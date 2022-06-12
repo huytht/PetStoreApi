@@ -2,7 +2,13 @@ package com.hcmue.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +20,15 @@ import com.hcmue.provider.file.MediaFile;
 import com.hcmue.provider.file.UnsupportedFileTypeException;
 import com.hcmue.provider.file.FileServiceFactory;
 import com.hcmue.provider.file.FileType;
+import com.hcmue.domain.FullTextSearchWithPagingParam;
 import com.hcmue.constant.AppConstant;
 import com.hcmue.constant.AppError;
 import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.pagination.PageDto;
+import com.hcmue.dto.pagination.PageInfo;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductDto;
+import com.hcmue.dto.product.ProductShortDto;
 import com.hcmue.dto.user.RemarkProduct;
 import com.hcmue.dto.product.ProductCreate;
 import com.hcmue.entity.AppUserProduct;
@@ -46,16 +55,19 @@ public class ProductServiceImpl implements ProductService{
 	private CategoryRepository categoryRepository;
 	private OriginRepository originRepository;
 	private AppUserProductRepository userProductRepository;
+	private EntityManager entityManager;
 	private FileService imageFileService;
 	
 	@Autowired
 	public ProductServiceImpl(ProductRepository productRepository, BreedRepository breedRepository, CategoryRepository categoryRepository,
-			OriginRepository originRepository, AppUserProductRepository userProductRepository) {
+			OriginRepository originRepository, AppUserProductRepository userProductRepository,
+			EntityManager entityManager) {
 		this.productRepository = productRepository;
 		this.breedRepository = breedRepository;
 		this.categoryRepository = categoryRepository;
 		this.originRepository = originRepository;
 		this.userProductRepository = userProductRepository;
+		this.entityManager = entityManager;
 		this.imageFileService = FileServiceFactory.getFileService(FileType.IMAGE);
 	}
 
@@ -243,6 +255,44 @@ public class ProductServiceImpl implements ProductService{
 			e.printStackTrace();
 
 			return new AppServiceResult<PageDto<RemarkProduct>>(false, AppError.Unknown.errorCode(),
+					AppError.Unknown.errorMessage(), null);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public AppServiceResult<PageDto<ProductShortDto>> searchByFTS(FullTextSearchWithPagingParam params) {
+		try {
+			FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+
+			QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
+					.forEntity(Product.class).get();
+
+			org.apache.lucene.search.Query combinedQuery = queryBuilder.keyword()
+					.onFields("name", "breed.name").matching(params.getText()).createQuery();
+
+			org.hibernate.search.jpa.FullTextQuery jpaQuery = fullTextEntityManager.createFullTextQuery(combinedQuery,
+					Product.class);
+			jpaQuery.setFirstResult(params.getPageParam().getPageIndex() * params.getPageParam().getPageSize());
+			jpaQuery.setMaxResults(params.getPageParam().getPageSize());
+			
+			List<Product> products = jpaQuery.getResultList();
+
+			PageDto<ProductShortDto> result = new PageDto<ProductShortDto>();
+			result.setContent(products.stream().map(item -> ProductShortDto.CreateFromEntity(item)).collect(Collectors.toList()));
+			PageInfo pageInfo = new PageInfo();
+			pageInfo.setCurrentPage(params.getPageParam().getPageIndex());
+			pageInfo.setPageSize(params.getPageParam().getPageSize());
+			pageInfo.setTotalElements((long) jpaQuery.getResultSize());
+
+			result.setPageInfo(pageInfo);
+
+			return new AppServiceResult<PageDto<ProductShortDto>>(true, 0, "Secceed!", result);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return new AppServiceResult<PageDto<ProductShortDto>>(false, AppError.Unknown.errorCode(),
 					AppError.Unknown.errorMessage(), null);
 		}
 	}
