@@ -6,6 +6,7 @@ import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductDto;
+import com.hcmue.dto.user.RemarkProduct;
 import com.hcmue.dto.product.ProductCreate;
 import com.hcmue.provider.file.UnsupportedFileTypeException;
 
@@ -22,4 +23,6 @@ public interface ProductService {
 	AppServiceResult<ProductDto> addProduct(ProductCreate product) throws UnsupportedFileTypeException;
 	
 	AppServiceResult<PageDto<ProductDto>> getProductListByCategory(String typeOfProduct, Long categoryId, PageParam pageParam);
+	
+	AppServiceResult<PageDto<RemarkProduct>> getRemarkListByProduct(Long productId, PageParam pageParam);
 }

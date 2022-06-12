@@ -20,13 +20,16 @@ import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductDto;
+import com.hcmue.dto.user.RemarkProduct;
 import com.hcmue.dto.product.ProductCreate;
+import com.hcmue.entity.AppUserProduct;
 import com.hcmue.entity.Breed;
 import com.hcmue.entity.Category;
 import com.hcmue.entity.Origin;
 import com.hcmue.entity.Product;
 import com.hcmue.entity.ProductImages;
 import com.hcmue.provider.file.FileService;
+import com.hcmue.repository.AppUserProductRepository;
 import com.hcmue.repository.BreedRepository;
 import com.hcmue.repository.CategoryRepository;
 import com.hcmue.repository.OriginRepository;
@@ -42,15 +45,17 @@ public class ProductServiceImpl implements ProductService{
 	private BreedRepository breedRepository;
 	private CategoryRepository categoryRepository;
 	private OriginRepository originRepository;
+	private AppUserProductRepository userProductRepository;
 	private FileService imageFileService;
 	
 	@Autowired
 	public ProductServiceImpl(ProductRepository productRepository, BreedRepository breedRepository, CategoryRepository categoryRepository,
-			OriginRepository originRepository) {
+			OriginRepository originRepository, AppUserProductRepository userProductRepository) {
 		this.productRepository = productRepository;
 		this.breedRepository = breedRepository;
 		this.categoryRepository = categoryRepository;
 		this.originRepository = originRepository;
+		this.userProductRepository = userProductRepository;
 		this.imageFileService = FileServiceFactory.getFileService(FileType.IMAGE);
 	}
 
@@ -222,6 +227,22 @@ public class ProductServiceImpl implements ProductService{
 			e.printStackTrace();
 
 			return new AppServiceResult<PageDto<ProductDto>>(false, AppError.Unknown.errorCode(),
+					AppError.Unknown.errorMessage(), null);
+		}
+	}
+
+	@Override
+	public AppServiceResult<PageDto<RemarkProduct>> getRemarkListByProduct(Long productId, PageParam pageParam) {
+		try {
+			Page<AppUserProduct> remarks = userProductRepository.findAllByProductId(productId, pageParam.getPageable());
+			
+			Page<RemarkProduct> dtoPage = remarks.map(item -> RemarkProduct.CreateFromEntity(item));
+			
+			return new AppServiceResult<PageDto<RemarkProduct>>(true, 0, "Succeed!", new PageDto<RemarkProduct>(dtoPage));
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return new AppServiceResult<PageDto<RemarkProduct>>(false, AppError.Unknown.errorCode(),
 					AppError.Unknown.errorMessage(), null);
 		}
 	}

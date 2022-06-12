@@ -21,6 +21,7 @@ import com.hcmue.dto.HttpResponseSuccess;
 import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductDto;
+import com.hcmue.dto.user.RemarkProduct;
 import com.hcmue.dto.product.ProductCreate;
 import com.hcmue.service.ProductService;
 
@@ -84,6 +85,21 @@ public class ProductController {
 		AppServiceResult<ProductDto> result = productService.addProduct(newProduct);
 
 		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<ProductDto>(result.getData()))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
+	
+	@GetMapping("/remark/list")
+	public ResponseEntity<HttpResponse> getListRemark(@Valid @RequestParam(value="id") Long productId,
+			@RequestParam(name = "page-number", required = false, defaultValue = "0") int pageNumber,
+			@RequestParam(name = "page-size", required = false, defaultValue = "30") int pageSize) {
+		
+		PageParam pageParam = new PageParam();
+		pageParam.setPageIndex(pageNumber);
+		pageParam.setPageSize(pageSize);
+		
+		AppServiceResult<PageDto<RemarkProduct>> result = productService.getRemarkListByProduct(productId, pageParam);
+
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<PageDto<RemarkProduct>>(result.getData()))
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
 
