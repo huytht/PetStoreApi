@@ -12,5 +12,6 @@ import lombok.Setter;
 public class UserLoginRes {
 	private Long userId;
 	private String username;
+	private String avatarImg;
 	private String token;
 }

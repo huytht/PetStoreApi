@@ -109,7 +109,7 @@ public class UserController {
 		AppUserDomain appUserDetails = (AppUserDomain) authentication.getPrincipal();
 
 		String userToken = appJwtTokenProvider.generateJwtToken(appUserDetails);
-		UserLoginRes res = new UserLoginRes(appUserDetails.getUserId(), appUserDetails.getUsername(), userToken);
+		UserLoginRes res = new UserLoginRes(appUserDetails.getUserId(), appUserDetails.getUsername(), appUserDetails.getAvatar(), userToken);
 
 		return ResponseEntity.ok(new HttpResponseSuccess<UserLoginRes>(res));
 	}

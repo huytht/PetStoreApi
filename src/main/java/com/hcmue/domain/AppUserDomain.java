@@ -74,5 +74,9 @@ public class AppUserDomain implements UserDetails {
 	public Long getUserId() {
 		return this.appUser.getId();
 	}
+	
+	public String getAvatar() {
+		return this.appUser.getUserInfo().getAvatarImg();
+	}
 
 }
