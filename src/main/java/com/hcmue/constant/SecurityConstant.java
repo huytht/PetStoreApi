@@ -20,6 +20,7 @@ public class SecurityConstant {
 	
 	public final static String[] PUBLIC_GET_URLS = {
 			"/product/**",
+			"/common/**",
 			"/myfile/images/**",
 	};
 	
