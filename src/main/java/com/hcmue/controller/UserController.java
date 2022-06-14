@@ -36,6 +36,8 @@ import com.hcmue.dto.HttpResponseError;
 import com.hcmue.dto.HttpResponseSuccess;
 import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
+import com.hcmue.dto.token.TokenRefreshRequest;
+import com.hcmue.dto.token.TokenRefreshResponse;
 import com.hcmue.dto.user.AppUserForAdminDto;
 import com.hcmue.dto.user.ChangePassword;
 import com.hcmue.dto.user.RemarkProduct;
@@ -46,9 +48,12 @@ import com.hcmue.dto.user.UserStatus;
 import com.hcmue.dto.user.UserWhiteList;
 import com.hcmue.dto.userinfo.UserInfoDtoReq;
 import com.hcmue.dto.userinfo.UserInfoDtoRes;
+import com.hcmue.entity.RefreshToken;
+import com.hcmue.handle.exception.TokenRefreshException;
 import com.hcmue.infrastructure.AppJwtTokenProvider;
 import com.hcmue.provider.file.UnsupportedFileTypeException;
 import com.hcmue.service.AppUserService;
+import com.hcmue.service.RefreshTokenService;
 
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 
@@ -57,6 +62,8 @@ import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 public class UserController {
 
 	private AppUserService appUserService;
+	
+	private RefreshTokenService refreshTokenService;
 
 	private AuthenticationManager authenticationManager;
 
@@ -66,10 +73,11 @@ public class UserController {
 	private String urlLoginApp;
 
 	@Autowired
-	public UserController(AppUserService appUserService, AuthenticationManager authenticationManager,
+	public UserController(AppUserService appUserService, RefreshTokenService refreshTokenService, AuthenticationManager authenticationManager,
 			AppJwtTokenProvider appJwtTokenProvider) {
 		this.appJwtTokenProvider = appJwtTokenProvider;
 		this.authenticationManager = authenticationManager;
+		this.refreshTokenService = refreshTokenService;
 		this.appUserService = appUserService;
 	}
 	
@@ -99,6 +107,23 @@ public class UserController {
 
 		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(url)).build();
 	}
+	
+	@PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+            		AppUserDomain appUserDetails = new AppUserDomain(user);
+            		
+                    String token = appJwtTokenProvider.generateJwtToken(appUserDetails);
+                    return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+                })
+                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+                        "Refresh token is not in database!"));
+    }
 
 	@PostMapping("/login")
 	public ResponseEntity<HttpResponse> login(@Valid @RequestBody UserLogin userLogin) {
@@ -109,7 +134,10 @@ public class UserController {
 		AppUserDomain appUserDetails = (AppUserDomain) authentication.getPrincipal();
 
 		String userToken = appJwtTokenProvider.generateJwtToken(appUserDetails);
-		UserLoginRes res = new UserLoginRes(appUserDetails.getUserId(), appUserDetails.getUsername(), appUserDetails.getAvatar(), userToken);
+		
+		RefreshToken refreshToken = refreshTokenService.createRefreshToken(appUserDetails.getUserId());
+		
+		UserLoginRes res = new UserLoginRes(appUserDetails.getUserId(), appUserDetails.getUsername(), appUserDetails.getAvatar(), userToken, refreshToken.getToken());
 
 		return ResponseEntity.ok(new HttpResponseSuccess<UserLoginRes>(res));
 	}

@@ -1,5 +1,7 @@
 package com.hcmue.dto.user;
 
+import com.hcmue.entity.RefreshToken;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +16,5 @@ public class UserLoginRes {
 	private String username;
 	private String avatarImg;
 	private String token;
+	private String refreshToken;
 }
