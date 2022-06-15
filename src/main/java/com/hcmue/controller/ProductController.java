@@ -39,7 +39,7 @@ public class ProductController {
 		this.productService = productService;
 	}
 
-	@GetMapping
+	@GetMapping("/list")
 	public ResponseEntity<HttpResponse> getProductListByType(@RequestParam(name="type") String type,
 			@RequestParam(name = "breed-id", required = false, defaultValue = "0") Long breedId,
 			@RequestParam(name = "category-id", required = false, defaultValue = "-1") Long categoryId,

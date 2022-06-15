@@ -78,7 +78,7 @@ public class AppUserDomain implements UserDetails {
 	public String getAvatar() {
 		return this.appUser.getUserInfo().getAvatarImg().equalsIgnoreCase("https://robohash.org/" + this.appUser.getUsername()) 
 				? this.appUser.getUserInfo().getAvatarImg() 
-				: "http://localhost8081/api" + this.appUser.getUserInfo().getAvatarImg();
+				: "http://localhost:8081/api" + this.appUser.getUserInfo().getAvatarImg();
 	}
 
 }

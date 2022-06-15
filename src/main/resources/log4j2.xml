@@ -33,7 +33,7 @@
 		</RollingFile>
 	</Appenders>
 	<Loggers>
-		<Logger name="com.aptech" level="debug"
+		<Logger name="com.hcmue" level="debug"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="RollingFileAppender" />
