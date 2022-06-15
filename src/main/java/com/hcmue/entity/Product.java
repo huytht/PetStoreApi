@@ -72,7 +72,7 @@ public class Product implements Serializable {
 	private Integer rate;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinTable(name = "pet_origin", joinColumns = { @JoinColumn(name = "pet_id") }, inverseJoinColumns = {
+	@JoinTable(name = "product_origin", joinColumns = { @JoinColumn(name = "product_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "origin_id") })
 	private Set<Origin> origins = new HashSet<>();
 
