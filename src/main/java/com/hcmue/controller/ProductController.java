@@ -50,13 +50,13 @@ public class ProductController {
 		pageParam.setPageIndex(pageNumber);
 		pageParam.setPageSize(pageSize);
 		
-		AppServiceResult<PageDto<ProductDto>> result = breedId != 0
+		AppServiceResult<PageDto<ProductShortDto>> result = breedId != 0
 				? productService.getPetListByBreed(type, breedId, pageParam)
 				: categoryId != -1
 				? productService.getProductListByCategory(type, categoryId, pageParam) 
 				: productService.getProductListByType(type, pageParam);
 
-		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<PageDto<ProductDto>>(result.getData()))
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<PageDto<ProductShortDto>>(result.getData()))
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
 	
@@ -122,6 +122,5 @@ public class ProductController {
 		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<PageDto<ProductShortDto>>(result.getData()))
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
-
 	
 }

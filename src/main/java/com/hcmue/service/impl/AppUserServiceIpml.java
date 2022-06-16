@@ -444,7 +444,6 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 			newRemark.setProduct(product);
 			newRemark.setAppUserProductId(new AppUserProductId(appUser.getId(), product.getId()));
 			newRemark.setRate(remarkProduct.getRate());
-			newRemark.setFavourite(remarkProduct.getFavourite());
 			newRemark.setRemark(remarkProduct.getRemark());
 			
 			userProductRepository.save(newRemark);

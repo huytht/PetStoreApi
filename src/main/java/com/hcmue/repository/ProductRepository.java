@@ -7,10 +7,11 @@ import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.hcmue.entity.AppUser;
 import com.hcmue.entity.Breed;
 import com.hcmue.entity.Product;
 
@@ -34,5 +35,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	
 	@Transactional
 	@Query(value = "SELECT p FROM Product p WHERE p.category.id > 2")
-	public Page<Product>findAllProductExceptPet(Pageable pageable);
+	public Page<Product> findAllProductExceptPet(Pageable pageable);
+	
+	@Transactional
+	@Query(value = "SELECT app.product FROM AppUserProduct app WHERE app.appUser = :appUser AND app.favourite = true")
+	public Page<Product> findAllProductInWishList(AppUser appUser, Pageable pageable);
 }

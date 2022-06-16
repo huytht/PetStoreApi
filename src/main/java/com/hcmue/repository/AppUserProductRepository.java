@@ -15,4 +15,6 @@ public interface AppUserProductRepository extends JpaRepository<AppUserProduct, 
 	public boolean existsByAppUserAndProduct(AppUser appUser, Product product);
 
 	public Page<AppUserProduct> findAllByProductId(Long productId, Pageable pageable);
+	
+	public AppUserProduct findByAppUserProductId(AppUserProductId id);
 }

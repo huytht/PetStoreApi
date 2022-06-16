@@ -36,6 +36,7 @@ import com.hcmue.dto.HttpResponseError;
 import com.hcmue.dto.HttpResponseSuccess;
 import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
+import com.hcmue.dto.product.ProductShortDto;
 import com.hcmue.dto.token.TokenRefreshRequest;
 import com.hcmue.dto.token.TokenRefreshResponse;
 import com.hcmue.dto.user.AppUserForAdminDto;
@@ -45,7 +46,6 @@ import com.hcmue.dto.user.UserLogin;
 import com.hcmue.dto.user.UserLoginRes;
 import com.hcmue.dto.user.UserRegister;
 import com.hcmue.dto.user.UserStatus;
-import com.hcmue.dto.user.UserWhiteList;
 import com.hcmue.dto.userinfo.UserInfoDtoReq;
 import com.hcmue.dto.userinfo.UserInfoDtoRes;
 import com.hcmue.entity.RefreshToken;
@@ -53,6 +53,7 @@ import com.hcmue.handle.exception.TokenRefreshException;
 import com.hcmue.infrastructure.AppJwtTokenProvider;
 import com.hcmue.provider.file.UnsupportedFileTypeException;
 import com.hcmue.service.AppUserService;
+import com.hcmue.service.ProductService;
 import com.hcmue.service.RefreshTokenService;
 
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
@@ -62,6 +63,8 @@ import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 public class UserController {
 
 	private AppUserService appUserService;
+	
+	private ProductService productService;
 	
 	private RefreshTokenService refreshTokenService;
 
@@ -74,10 +77,11 @@ public class UserController {
 
 	@Autowired
 	public UserController(AppUserService appUserService, RefreshTokenService refreshTokenService, AuthenticationManager authenticationManager,
-			AppJwtTokenProvider appJwtTokenProvider) {
+			AppJwtTokenProvider appJwtTokenProvider, ProductService productService) {
 		this.appJwtTokenProvider = appJwtTokenProvider;
 		this.authenticationManager = authenticationManager;
 		this.refreshTokenService = refreshTokenService;
+		this.productService = productService;
 		this.appUserService = appUserService;
 	}
 	
@@ -150,21 +154,6 @@ public class UserController {
 		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<UserInfoDtoRes>(result.getData()))
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
-	
-//	@GetMapping("/white-list")
-//	public ResponseEntity<HttpResponse> getWhiteList(
-//			@RequestParam(name = "page-number", required = false, defaultValue = "0") int pageNumber,
-//			@RequestParam(name = "page-size", required = false, defaultValue = "30") int pageSize) {
-//
-//		PageParam pageParam = new PageParam();
-//		pageParam.setPageIndex(pageNumber);
-//		pageParam.setPageSize(pageSize);
-//		
-//		AppServiceResult<PageDto<TrackShort>> result = trackService.getAllTrackLiked(pageParam);
-//
-//		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<PageDto<TrackShort>>(result.getData()))
-//				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
-//	}
 
 	@PutMapping("/profiles")
 	public ResponseEntity<HttpResponse> saveProfiles(@Valid @RequestBody UserInfoDtoReq userInfo) {
@@ -218,15 +207,6 @@ public class UserController {
 		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<String>("Succeed!, please check email!"))
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
-
-//	@PutMapping("/white-list")
-//	public ResponseEntity<HttpResponse> updateWhiteList(@Valid @RequestBody UserWhiteList dto) {
-//
-//		AppBaseResult result = trackService.updateWhiteList(dto);
-//
-//		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<String>("Succeed!"))
-//				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
-//	}
 	
 	@PostMapping("/remark")
 	public ResponseEntity<HttpResponse> saveRemark(@Valid @RequestBody RemarkProduct dto) {
@@ -246,12 +226,26 @@ public class UserController {
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
 	
-//	@GetMapping(path = "/track-liked")
-//	public ResponseEntity<HttpResponse> getTrackLiked() {
-//
-//		AppServiceResult<Long[]> result = trackService.getTrackIdsLiked();
-//
-//		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<Long[]>(result.getData()))
-//				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
-//	}
+	@GetMapping("/wish-list")
+	public ResponseEntity<HttpResponse> getWishList(@RequestParam(name = "page-number", required = false, defaultValue = "0") int pageNumber,
+			@RequestParam(name = "page-size", required = false, defaultValue = "30") int pageSize) {
+		
+		PageParam pageParam = new PageParam();
+		pageParam.setPageIndex(pageNumber);
+		pageParam.setPageSize(pageSize);
+		
+		AppServiceResult<PageDto<ProductShortDto>> result = productService.getWishList(pageParam);
+		
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<PageDto<ProductShortDto>>(result.getData()))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
+	
+	@PostMapping("/wish-list")
+	public ResponseEntity<HttpResponse> updateWhiteList(@Valid @RequestParam("product-id") Long productId) {
+
+		AppBaseResult result = productService.updateWishList(productId);
+
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<String>("Succeed!"))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
 }

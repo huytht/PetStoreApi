@@ -23,6 +23,7 @@ import com.hcmue.provider.file.FileType;
 import com.hcmue.domain.FullTextSearchWithPagingParam;
 import com.hcmue.constant.AppConstant;
 import com.hcmue.constant.AppError;
+import com.hcmue.domain.AppBaseResult;
 import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageInfo;
@@ -30,8 +31,11 @@ import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductDto;
 import com.hcmue.dto.product.ProductShortDto;
 import com.hcmue.dto.user.RemarkProduct;
+import com.hcmue.dto.user.UserWishList;
 import com.hcmue.dto.product.ProductCreate;
+import com.hcmue.entity.AppUser;
 import com.hcmue.entity.AppUserProduct;
+import com.hcmue.entity.AppUserProductId;
 import com.hcmue.entity.Breed;
 import com.hcmue.entity.Category;
 import com.hcmue.entity.Origin;
@@ -39,11 +43,13 @@ import com.hcmue.entity.Product;
 import com.hcmue.entity.ProductImages;
 import com.hcmue.provider.file.FileService;
 import com.hcmue.repository.AppUserProductRepository;
+import com.hcmue.repository.AppUserRepository;
 import com.hcmue.repository.BreedRepository;
 import com.hcmue.repository.CategoryRepository;
 import com.hcmue.repository.OriginRepository;
 import com.hcmue.repository.ProductRepository;
 import com.hcmue.service.ProductService;
+import com.hcmue.util.AppUtils;
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -55,18 +61,20 @@ public class ProductServiceImpl implements ProductService{
 	private CategoryRepository categoryRepository;
 	private OriginRepository originRepository;
 	private AppUserProductRepository userProductRepository;
+	private AppUserRepository appUserRepository;
 	private EntityManager entityManager;
 	private FileService imageFileService;
 	
 	@Autowired
 	public ProductServiceImpl(ProductRepository productRepository, BreedRepository breedRepository, CategoryRepository categoryRepository,
 			OriginRepository originRepository, AppUserProductRepository userProductRepository,
-			EntityManager entityManager) {
+			EntityManager entityManager, AppUserRepository appUserRepository) {
 		this.productRepository = productRepository;
 		this.breedRepository = breedRepository;
 		this.categoryRepository = categoryRepository;
 		this.originRepository = originRepository;
 		this.userProductRepository = userProductRepository;
+		this.appUserRepository = appUserRepository;
 		this.entityManager = entityManager;
 		this.imageFileService = FileServiceFactory.getFileService(FileType.IMAGE);
 	}
@@ -191,54 +199,54 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
-	public AppServiceResult<PageDto<ProductDto>> getProductListByType(String typeOfProduct, PageParam pageParam) {
+	public AppServiceResult<PageDto<ProductShortDto>> getProductListByType(String typeOfProduct, PageParam pageParam) {
 		try {
 			Page<Product> products = typeOfProduct.equalsIgnoreCase(AppConstant.PRODUCT_NEW) 
 									? productRepository.findAllByOrderByIdDesc(pageParam.getPageable()) 
 									: productRepository.findAll(pageParam.getPageable());
-			Page<ProductDto> dtoPage = products.map(item -> ProductDto.CreateFromEntity(item));
+			Page<ProductShortDto> dtoPage = products.map(item -> ProductShortDto.CreateFromEntity(item));
 			
-			return new AppServiceResult<PageDto<ProductDto>>(true, 0, "Succeed!", new PageDto<ProductDto>(dtoPage));
+			return new AppServiceResult<PageDto<ProductShortDto>>(true, 0, "Succeed!", new PageDto<ProductShortDto>(dtoPage));
 		} catch (Exception e) {
 			e.printStackTrace();
 
-			return new AppServiceResult<PageDto<ProductDto>>(false, AppError.Unknown.errorCode(),
+			return new AppServiceResult<PageDto<ProductShortDto>>(false, AppError.Unknown.errorCode(),
 					AppError.Unknown.errorMessage(), null);
 		}
 	}
 
 	@Override
-	public AppServiceResult<PageDto<ProductDto>> getPetListByBreed(String typeOfProduct, Long breedId, PageParam pageParam) {
+	public AppServiceResult<PageDto<ProductShortDto>> getPetListByBreed(String typeOfProduct, Long breedId, PageParam pageParam) {
 		try {
 			Page<Product> products = typeOfProduct.equalsIgnoreCase(AppConstant.PRODUCT_NEW) 
 									? productRepository.findAllByBreedIdOrderByIdDesc(breedId, pageParam.getPageable()) 
 									: productRepository.findAllByBreedId(breedId, pageParam.getPageable());
-			Page<ProductDto> dtoPage = products.map(item -> ProductDto.CreateFromEntity(item));
+			Page<ProductShortDto> dtoPage = products.map(item -> ProductShortDto.CreateFromEntity(item));
 			
-			return new AppServiceResult<PageDto<ProductDto>>(true, 0, "Succeed!", new PageDto<ProductDto>(dtoPage));
+			return new AppServiceResult<PageDto<ProductShortDto>>(true, 0, "Succeed!", new PageDto<ProductShortDto>(dtoPage));
 		} catch (Exception e) {
 			e.printStackTrace();
 
-			return new AppServiceResult<PageDto<ProductDto>>(false, AppError.Unknown.errorCode(),
+			return new AppServiceResult<PageDto<ProductShortDto>>(false, AppError.Unknown.errorCode(),
 					AppError.Unknown.errorMessage(), null);
 		}
 	}
 
 	@Override
-	public AppServiceResult<PageDto<ProductDto>> getProductListByCategory(String typeOfProduct, Long categoryId, PageParam pageParam) {
+	public AppServiceResult<PageDto<ProductShortDto>> getProductListByCategory(String typeOfProduct, Long categoryId, PageParam pageParam) {
 		try {
 			Page<Product> products = typeOfProduct.equalsIgnoreCase(AppConstant.PRODUCT_NEW) && categoryId != 0
 									? productRepository.findAllByCategoryIdOrderByIdDesc(categoryId, pageParam.getPageable())
 									: categoryId == 0
 									? productRepository.findAllProductExceptPet(pageParam.getPageable())
 									: productRepository.findAllByCategoryId(categoryId, pageParam.getPageable());
-			Page<ProductDto> dtoPage = products.map(item -> ProductDto.CreateFromEntity(item));
+			Page<ProductShortDto> dtoPage = products.map(item -> ProductShortDto.CreateFromEntity(item));
 			
-			return new AppServiceResult<PageDto<ProductDto>>(true, 0, "Succeed!", new PageDto<ProductDto>(dtoPage));
+			return new AppServiceResult<PageDto<ProductShortDto>>(true, 0, "Succeed!", new PageDto<ProductShortDto>(dtoPage));
 		} catch (Exception e) {
 			e.printStackTrace();
 
-			return new AppServiceResult<PageDto<ProductDto>>(false, AppError.Unknown.errorCode(),
+			return new AppServiceResult<PageDto<ProductShortDto>>(false, AppError.Unknown.errorCode(),
 					AppError.Unknown.errorMessage(), null);
 		}
 	}
@@ -294,6 +302,71 @@ public class ProductServiceImpl implements ProductService{
 
 			return new AppServiceResult<PageDto<ProductShortDto>>(false, AppError.Unknown.errorCode(),
 					AppError.Unknown.errorMessage(), null);
+		}
+	}
+
+	@Override
+	public AppServiceResult<PageDto<ProductShortDto>> getWishList(PageParam pageParam) {
+		try {
+			AppUser appUser = appUserRepository.findByUsername(AppUtils.getCurrentUsername());
+			
+			if (appUser == null) {
+				logger.warn("Not logged in!");
+
+				return new AppServiceResult<PageDto<ProductShortDto>>(false, AppError.Validattion.errorCode(),
+						"Not logged in!", null);
+			}
+
+			Page<Product> results = productRepository.findAllProductInWishList(appUser, pageParam.getPageable());
+			Page<ProductShortDto> dtoPage = results.map(item -> ProductShortDto.CreateFromEntity(item));
+
+			return new AppServiceResult<PageDto<ProductShortDto>>(true, 0, "Succeed!", new PageDto<ProductShortDto>(dtoPage));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return new AppServiceResult<PageDto<ProductShortDto>>(false, AppError.Unknown.errorCode(),
+					AppError.Unknown.errorMessage(), null);
+		}
+	}
+
+	@Override
+	public AppBaseResult updateWishList(Long productId) {
+		try {
+			AppUser appUser = appUserRepository.findByUsername(AppUtils.getCurrentUsername());
+			if (appUser == null) {
+				logger.warn("Not logged in!");
+
+				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(), "Not logged in!");
+			}
+
+			Product product = productRepository.findById(productId).orElse(null);
+
+			if (product == null) {
+				logger.warn("Product Id is not exist: " + productId + ", Cannot further process!");
+
+				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
+						"Product Id is not exist: " + productId);
+			}
+
+			boolean existWishList = userProductRepository.existsByAppUserAndProduct(appUser, product);
+			AppUserProduct newWL = new AppUserProduct();
+			newWL.setAppUserProductId(new AppUserProductId(appUser.getId(), product.getId()));
+			if (existWishList) {
+				newWL = userProductRepository.findByAppUserProductId(newWL.getAppUserProductId());
+				newWL.setFavourite(newWL.getFavourite() == null ? Boolean.TRUE : !newWL.getFavourite());
+			} else {
+				newWL.setAppUser(appUser);
+				newWL.setProduct(product);
+				newWL.setFavourite(Boolean.TRUE);
+			}
+			userProductRepository.save(newWL);
+
+			return AppBaseResult.GenarateIsSucceed();
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return AppBaseResult.GenarateIsFailed(AppError.Unknown.errorCode(), AppError.Unknown.errorMessage());
 		}
 	}
 
