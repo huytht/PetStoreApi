@@ -31,7 +31,6 @@ import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductDto;
 import com.hcmue.dto.product.ProductShortDto;
 import com.hcmue.dto.user.RemarkProduct;
-import com.hcmue.dto.user.UserWishList;
 import com.hcmue.dto.product.ProductCreate;
 import com.hcmue.entity.AppUser;
 import com.hcmue.entity.AppUserProduct;
@@ -254,7 +253,7 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public AppServiceResult<PageDto<RemarkProduct>> getRemarkListByProduct(Long productId, PageParam pageParam) {
 		try {
-			Page<AppUserProduct> remarks = userProductRepository.findAllByProductId(productId, pageParam.getPageable());
+			Page<AppUserProduct> remarks = userProductRepository.findAllByProductIdOrderByDateUpdate(productId, pageParam.getPageable());
 			
 			Page<RemarkProduct> dtoPage = remarks.map(item -> RemarkProduct.CreateFromEntity(item));
 			

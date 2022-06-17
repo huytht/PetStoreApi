@@ -2,6 +2,9 @@ package com.hcmue.dto.product;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.hcmue.dto.breed.BreedDto;
@@ -57,9 +60,10 @@ public class ProductDto {
 				petDto.origins.add(OriginDto.CreateFromEntity(origin));
 			}
 		petDto.description = src.getDescription();
-
+		
 		if (!src.getProductImages().isEmpty()) 
 			for (ProductImages image : src.getProductImages()) {
+				Collections.sort(src.getProductImages(), Comparator.comparingLong(ProductImages::getId));
 				petDto.imagePath.add(image.getImagePath());
 			}
 		

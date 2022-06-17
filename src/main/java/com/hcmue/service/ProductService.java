@@ -10,7 +10,6 @@ import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductDto;
 import com.hcmue.dto.product.ProductShortDto;
 import com.hcmue.dto.user.RemarkProduct;
-import com.hcmue.dto.user.UserWishList;
 import com.hcmue.dto.product.ProductCreate;
 import com.hcmue.provider.file.UnsupportedFileTypeException;
 

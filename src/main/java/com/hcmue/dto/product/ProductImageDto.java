@@ -21,6 +21,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductImageDto {
 	
+	private Long id;
+	
 	private String imagePath;
 	
 	private ProductDto productDto;

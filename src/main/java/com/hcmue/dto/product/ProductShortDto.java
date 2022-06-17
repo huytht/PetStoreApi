@@ -1,8 +1,11 @@
 package com.hcmue.dto.product;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
 
 import com.hcmue.entity.Product;
+import com.hcmue.entity.ProductImages;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,8 +36,10 @@ public class ProductShortDto {
 		petDto.rate = src.getRate();
 		petDto.price = src.getPrice();
 		
-		if (!src.getProductImages().isEmpty()) 
+		if (!src.getProductImages().isEmpty())  {
+			Collections.sort(src.getProductImages(), Comparator.comparingLong(ProductImages::getId));
 			petDto.imagePath = src.getProductImages().iterator().next().getImagePath();
+		}
 		
 		return petDto;
 	}

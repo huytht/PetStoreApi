@@ -2,7 +2,9 @@ package com.hcmue.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -88,7 +90,7 @@ public class Product implements Serializable {
 	private Category category;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	private Set<ProductImages> productImages = new HashSet<>();
+	private List<ProductImages> productImages = new ArrayList<>();
 	
 
 }

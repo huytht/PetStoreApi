@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hcmue.constant.FileConstant;
+import com.hcmue.constant.SecurityConstant;
 import com.hcmue.domain.AppBaseResult;
 import com.hcmue.domain.AppServiceResult;
 import com.hcmue.domain.AppUserDomain;
@@ -120,9 +121,8 @@ public class UserController {
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
-            		AppUserDomain appUserDetails = new AppUserDomain(user);
-            		
-                    String token = appJwtTokenProvider.generateJwtToken(appUserDetails);
+            		RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+            		String token = refreshToken.getToken();
                     return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
