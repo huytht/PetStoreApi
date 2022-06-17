@@ -19,7 +19,6 @@ public class UserLogin {
 	private String username;
 
 	@NotEmpty
-	@Size(min = 8, message = "password should have at least 8 characters")
 	private String password;
 
 }

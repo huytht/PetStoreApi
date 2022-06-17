@@ -29,14 +29,14 @@ public class AppJwtTokenProvider {
 	@Value("${jwt.secret}")
 	private String secret;
 
-	public String generateJwtToken(AppUserDomain appUserDetails) {
+	public String generateJwtToken(AppUserDomain appUserDetails, Long expirationTime) {
 		
 		String[] claims = getClaimsFromUser(appUserDetails);
 
 		return JWT.create().withIssuer(SecurityConstant.COMPANY).withAudience(SecurityConstant.APPLICATION_NAME)
 				.withIssuedAt(new Date()).withSubject(appUserDetails.getUsername())
 				.withArrayClaim(SecurityConstant.AUTHORITIES, claims)
-				.withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstant.EXPIRATION_TIME))
+				.withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
 				.sign(Algorithm.HMAC512(secret.getBytes()));
 	}
 

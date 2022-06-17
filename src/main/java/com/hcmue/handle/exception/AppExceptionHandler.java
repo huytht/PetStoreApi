@@ -32,13 +32,13 @@ import java.util.Objects;
 public class AppExceptionHandler {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
-	private static final String ACCOUNT_LOCKED = "Your account has been locked. Please contact administration";
-    private static final String METHOD_IS_NOT_ALLOWED = "This request method is not allowed on this endpoint. Please send a '%s' request";
-    private static final String INTERNAL_SERVER_ERROR_MSG = "An error occurred while processing the request";
-    private static final String INCORRECT_CREDENTIALS = "Username / password incorrect. Please try again";
-    private static final String ACCOUNT_DISABLED = "Your account has been disabled. Please verify email or contact administration";
-    private static final String ERROR_PROCESSING_FILE = "Error occurred while processing file";
-    private static final String NOT_ENOUGH_PERMISSION = "You do not have enough permission";
+	private static final String ACCOUNT_LOCKED = "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên";
+    private static final String METHOD_IS_NOT_ALLOWED = "This request method is not allowed on this endpoint. Please send a '%s' request.";
+    private static final String INTERNAL_SERVER_ERROR_MSG = "An error occurred while processing the request.";
+    private static final String INCORRECT_CREDENTIALS = "Tài khoản hoặc mật khẩu không chính xác. Vui lòng thử lại.";
+    private static final String ACCOUNT_DISABLED = "Tài khoản của bạn chưa được kích hoạt. Vui lòng xác nhận email hoặc liên hệ với quản trị viên.";
+    private static final String ERROR_PROCESSING_FILE = "Error occurred while processing file.";
+    private static final String NOT_ENOUGH_PERMISSION = "Bạn không có đủ quyền để truy cập.";
 	
 	// Account
     @ExceptionHandler(DisabledException.class)

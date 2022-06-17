@@ -121,8 +121,9 @@ public class UserController {
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
-            		RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
-            		String token = refreshToken.getToken();
+                	AppUserDomain appUserDetails = new AppUserDomain(user);
+
+                    String token = appJwtTokenProvider.generateJwtToken(appUserDetails, SecurityConstant.REFRESH_EXPIRATION_TIME);
                     return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
@@ -137,7 +138,7 @@ public class UserController {
 
 		AppUserDomain appUserDetails = (AppUserDomain) authentication.getPrincipal();
 
-		String userToken = appJwtTokenProvider.generateJwtToken(appUserDetails);
+		String userToken = appJwtTokenProvider.generateJwtToken(appUserDetails, SecurityConstant.EXPIRATION_TIME);
 		
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(appUserDetails.getUserId());
 		
