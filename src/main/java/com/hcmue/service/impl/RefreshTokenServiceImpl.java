@@ -18,7 +18,8 @@ import com.hcmue.service.RefreshTokenService;
 
 @Service
 public class RefreshTokenServiceImpl implements RefreshTokenService {
-	 @Value("${jwt.app.jwtRefreshExpirationMs}")
+	 
+	@Value("${jwt.app.jwtRefreshExpirationMs}")
 	 private Long refreshTokenDurationMs;
 	
 	 @Autowired

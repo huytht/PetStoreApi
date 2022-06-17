@@ -13,7 +13,7 @@ public class SecurityConstant {
 	
 	public final static String APPLICATION_NAME = "PetStore";
 	
-	public final static Long EXPIRATION_TIME = 432000000L;
+	public final static Long EXPIRATION_TIME = 300000L;
 	
 	public final static String[] PUBLIC_URLS = { "/user/register", 
 			"/user/login", "/user/verify/**", "/user/image/profile/**", "/user/image/**" ,"/user/image/**/**", "/user/reset-password/**", "/user/refresh-token"};
