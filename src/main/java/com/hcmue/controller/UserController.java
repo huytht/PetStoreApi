@@ -108,9 +108,9 @@ public class UserController {
 	public ResponseEntity<Void> verifyEmail(@PathVariable(name = "token", required = true) UUID token) {
 
 		AppBaseResult result = appUserService.verifyEmail(token);
-		String url = urlLoginApp + (result.isSuccess() ? "=success" : "=fail");
+//		String url = urlLoginApp + (result.isSuccess() ? "=success" : "=fail");
 
-		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(url)).build();
+		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(urlLoginApp)).build();
 	}
 	
 	@PostMapping("/refresh-token")

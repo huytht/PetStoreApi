@@ -126,7 +126,7 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 				logger.warn("Email is exist: " + userRegister.getEmail() + ", Cannot further process!");
 
 				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
-						"Email is exist: " + userRegister.getEmail());
+						"Email " + userRegister.getEmail() + " đã được sử dụng. Vui lòng nhập email khác");
 			}
 
 			// TODO: Check email confirm, return message or resend mail
@@ -136,7 +136,7 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 				logger.warn("Username is exist: " + userRegister.getUsername() + ", Cannot further process!");
 
 				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
-						"Username is exist: " + userRegister.getUsername());
+						"Tên tài khoản " + userRegister.getUsername() + " đã tồn tại.");
 			}
 
 			AppUser userNew = mapper.convertValue(userRegister, AppUser.class);
