@@ -265,6 +265,14 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 				}
 
 				// TODO: Implement mapping
+				AppUser userByEmail = appUserRepository.findByEmail(userInfo.getEmail());
+				if (userByEmail != null && userByEmail.getId() != user.getId()) {
+					logger.warn("Email is exist: " + userInfo.getEmail() + ", Cannot further process!");
+
+					return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
+							"Email " + userInfo.getEmail() + " đã được sử dụng. Vui lòng nhập email khác");
+				}
+
 				user.setEmail(userInfo.getEmail());
 				user.getUserInfo().setFirstName(userInfo.getFirstName());
 				user.getUserInfo().setLastName(userInfo.getLastName());
@@ -297,10 +305,10 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 			}
 
 			if (changePassword.getNewPassword().equals(changePassword.getOldPassword())) {
-				logger.warn("New password euqals old password, Cannot further process!");
+				logger.warn("New password equals old password, Cannot further process!");
 
 				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
-						"New password euqals old password");
+						"Mật khẩu mới trùng với mật khẩu cũ!");
 			}
 
 			AppUser user = appUserRepository.findByUsername(currentUsername);
@@ -314,7 +322,7 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 			if (!bCryptPasswordEncoder.matches(changePassword.getOldPassword(), user.getPassword())) {
 				logger.warn("Password incorrect, Cannot further process!");
 
-				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(), "Password incorrect!");
+				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(), "Sai mật khẩu!");
 			}
 
 			user.setPassword(bCryptPasswordEncoder.encode(changePassword.getNewPassword()));
