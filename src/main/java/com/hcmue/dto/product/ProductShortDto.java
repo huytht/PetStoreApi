@@ -28,19 +28,22 @@ public class ProductShortDto {
 	
 	private BigDecimal price;
 	
+	private Long amount;
+	
 	public static ProductShortDto CreateFromEntity(Product src) {
-		ProductShortDto petDto = new ProductShortDto();
+		ProductShortDto productDto = new ProductShortDto();
 
-		petDto.id = src.getId();
-		petDto.name = src.getName();
-		petDto.rate = src.getRate();
-		petDto.price = src.getPrice();
+		productDto.id = src.getId();
+		productDto.name = src.getName();
+		productDto.rate = src.getRate();
+		productDto.price = src.getPrice();
+		productDto.amount = src.getAmount();
 		
 		if (!src.getProductImages().isEmpty())  {
 			Collections.sort(src.getProductImages(), Comparator.comparingLong(ProductImages::getId));
-			petDto.imagePath = src.getProductImages().iterator().next().getImagePath();
+			productDto.imagePath = src.getProductImages().iterator().next().getImagePath();
 		}
 		
-		return petDto;
+		return productDto;
 	}
 }
