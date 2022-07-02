@@ -2,8 +2,11 @@ package com.hcmue.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,6 +22,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.hcmue.dto.order.OrderItemDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,21 +48,21 @@ public class Order implements Serializable {
 	@Column(name = "order_tracking_number")
 	private String orderTrackingNumber;
 	
-	@Column(name = "order_date")
-	@CreationTimestamp
-	private Date orderDate;
-	
-	@Column(name = "expected_delivery_date")
-	private Date expectedDeliveryDate;
-	
-	@Column(name = "total_amount")
-	private BigDecimal totalAmount;
+	@Column(name = "total_price")
+	private BigDecimal totalPrice;
 	
 	@Column(name = "total_quantity")
 	private Long totalQuantity;
 	
-	@Column(name = "order_status")
-	private int orderStatus;
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+			CascadeType.REFRESH })
+	@JoinColumn(name = "order_status_id")
+	private OrderStatus orderStatus;
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+			CascadeType.REFRESH })
+	@JoinColumn(name = "order_payment_id")
+	private Payment payment;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
@@ -64,7 +70,7 @@ public class Order implements Serializable {
 	private AppUser user;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="order")
-	private List<OrderItem> orderItems;
+	private Set<OrderItem> orderItems;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="shipping_address_id", referencedColumnName = "id")
@@ -73,6 +79,24 @@ public class Order implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="billing_address_id", referencedColumnName = "id")
 	private Address billingAddress;
+	
+	@Column(name = "order_date", updatable = false)
+	@CreationTimestamp
+	private Date orderDate;
+
+    @Column(name = "last_updated")
+    @UpdateTimestamp
+    private Date lastUpdated;
+	
+	public void add(OrderItem item) {
+		if (item != null) {
+			if (orderItems == null) {
+				orderItems = new HashSet<OrderItem>();
+			}
+		}
+		orderItems.add(item);
+		item.setOrder(this);
+	}
 	
 
 }

@@ -294,7 +294,7 @@ public class ProductServiceImpl implements ProductService{
 
 			result.setPageInfo(pageInfo);
 
-			return new AppServiceResult<PageDto<ProductShortDto>>(true, 0, "Secceed!", result);
+			return new AppServiceResult<PageDto<ProductShortDto>>(true, 0, "Succeed!", result);
 
 		} catch (Exception e) {
 			e.printStackTrace();

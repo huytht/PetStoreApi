@@ -1,6 +1,7 @@
 package com.hcmue.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -71,9 +72,9 @@ public class AppUser implements Serializable {
 	@JsonIgnoreProperties("appUser")
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "appUser")
 	private Set<VerificationToken> verificationTokens;
-//	
-//	@OneToMany(fetch = FetchType.LAZY, mappedBy = "appUser")
-//	private Set<WhiteList> whiteLists = new HashSet<>();
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private Set<Order> orders;
 	
 	@CreationTimestamp
 	@Column(name = "date_new")
@@ -88,5 +89,15 @@ public class AppUser implements Serializable {
 
 	@Column(name = "user_edit")
 	private String userEdit;
+	
+	public void add(Order order) {
+		if (order != null) {
+			if (orders == null) {
+				orders = new HashSet<>();
+			}
+		}
+		orders.add(order);
+		order.setUser(this);
+	}
 
 }
