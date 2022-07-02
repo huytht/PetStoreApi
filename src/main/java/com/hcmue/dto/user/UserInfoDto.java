@@ -18,6 +18,7 @@ public class UserInfoDto {
 	  private String firstName;
 	  private String lastName;
 	  private String email;
+	  private String phone;
 	  private String avatarImg;
 
 	public static UserInfoDto CreateFromEntity(UserInfo src) {
@@ -27,6 +28,7 @@ public class UserInfoDto {
 		dest.username = src.getAppUser().getUsername();
 		dest.firstName = src.getFirstName();
 		dest.lastName = src.getLastName();
+		dest.phone = src.getPhone();
 		dest.avatarImg = AppUtils.createLinkOnCurrentHttpServletRequest(src.getAvatarImg());
 		dest.email = src.getAppUser().getEmail();
 

@@ -2,8 +2,10 @@ package com.hcmue.entity;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "order_item")
@@ -22,6 +25,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class OrderItem {
 
 	@Id
@@ -31,17 +35,16 @@ public class OrderItem {
 	@Column(name = "price")
 	private BigDecimal price;
 	
-	@Column(name = "image_url")
-	private String imageUrl;
-	
 	@Column(name="quantity")
 	private int quantity;
 	
-	@Column(name="pet_id")
-	private Long petId;
+	@Column(name="product_id", nullable = false)
+	private Long productId;
 	
-	@Column(name="pet_product_id")
-	private Long petProductId;
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+			CascadeType.REFRESH }, optional = false)
+	@JoinColumn(name = "product_id", insertable = false, updatable = false)
+	private Product product;
 	
 	@ManyToOne
 	@JoinColumn(name="order_id")

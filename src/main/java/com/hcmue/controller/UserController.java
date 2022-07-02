@@ -35,6 +35,7 @@ import com.hcmue.domain.AppUserDomain;
 import com.hcmue.dto.HttpResponse;
 import com.hcmue.dto.HttpResponseError;
 import com.hcmue.dto.HttpResponseSuccess;
+import com.hcmue.dto.order.OrderDto;
 import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductShortDto;
@@ -54,6 +55,7 @@ import com.hcmue.handle.exception.TokenRefreshException;
 import com.hcmue.infrastructure.AppJwtTokenProvider;
 import com.hcmue.provider.file.UnsupportedFileTypeException;
 import com.hcmue.service.AppUserService;
+import com.hcmue.service.OrderService;
 import com.hcmue.service.ProductService;
 import com.hcmue.service.RefreshTokenService;
 
@@ -68,6 +70,8 @@ public class UserController {
 	private ProductService productService;
 	
 	private RefreshTokenService refreshTokenService;
+	
+	private OrderService orderService;
 
 	private AuthenticationManager authenticationManager;
 
@@ -78,12 +82,13 @@ public class UserController {
 
 	@Autowired
 	public UserController(AppUserService appUserService, RefreshTokenService refreshTokenService, AuthenticationManager authenticationManager,
-			AppJwtTokenProvider appJwtTokenProvider, ProductService productService) {
+			AppJwtTokenProvider appJwtTokenProvider, ProductService productService, OrderService orderService) {
 		this.appJwtTokenProvider = appJwtTokenProvider;
 		this.authenticationManager = authenticationManager;
 		this.refreshTokenService = refreshTokenService;
 		this.productService = productService;
 		this.appUserService = appUserService;
+		this.orderService = orderService;
 	}
 	
 	@GetMapping(path = "/list")
@@ -247,6 +252,21 @@ public class UserController {
 		AppBaseResult result = productService.updateWishList(productId);
 
 		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<String>("Succeed!"))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
+	
+	@GetMapping("/order")
+	public ResponseEntity<HttpResponse> getOrderList(@RequestParam(name = "order-status", defaultValue = "0") Long orderStatus,
+			@RequestParam(name = "page-number", required = false, defaultValue = "0") int pageNumber,
+			@RequestParam(name = "page-size", required = false, defaultValue = "30") int pageSize) {
+		
+		PageParam pageParam = new PageParam();
+		pageParam.setPageIndex(pageNumber);
+		pageParam.setPageSize(pageSize);
+		
+		AppServiceResult<PageDto<OrderDto>> result = orderService.getListOrder(orderStatus, pageParam);
+		
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<PageDto<OrderDto>>(result.getData()))
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
 }

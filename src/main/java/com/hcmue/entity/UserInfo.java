@@ -39,6 +39,9 @@ public class UserInfo implements Serializable {
 
 	@Column(name = "last_name")
 	private String lastName;
+	
+	@Column(name = "phone")
+	private String phone;
 
 	@Column(name = "avatar_img")
 	private String avatarImg;

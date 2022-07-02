@@ -22,7 +22,7 @@ import com.hcmue.service.CommonService;
 @Service
 public class CommonServiceImpl implements CommonService{
 	
-	private final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 	
 	private ProductRepository productRepository;
 	private CategoryRepository categoryRepository;

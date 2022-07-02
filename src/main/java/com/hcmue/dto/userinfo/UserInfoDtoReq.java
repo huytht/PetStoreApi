@@ -26,6 +26,9 @@ public class UserInfoDtoReq {
 
 	@NotEmpty
 	private String lastName;
+	
+	@NotEmpty
+	private String phone;
 
 	@Email
 	private String email;
