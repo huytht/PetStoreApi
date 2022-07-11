@@ -107,14 +107,16 @@ public class ProductController {
 	}
 	
 	@GetMapping(path = "/search-text")
-	public ResponseEntity<HttpResponse> searchText(@RequestParam(value = "text", required = true) String text, 
-				@RequestParam(value = "pageIndex", required = false) Integer pageIndex) {
+	public ResponseEntity<HttpResponse> searchText(@RequestParam(value = "text", required = true) String text,
+				@RequestParam(name = "page-number", required = false, defaultValue = "0") Integer pageNumber,
+				@RequestParam(name = "page-size", required = false, defaultValue = "30") Integer pageSize) {
 		
 		if(StringUtil.isBlank(text))
 			return ResponseEntity.badRequest().body(new HttpResponseError(null, "Text search is not empty"));
 			
 		FullTextSearchWithPagingParam params = new FullTextSearchWithPagingParam();
-		params.getPageParam().setPageIndex(pageIndex == null ? 0 : pageIndex);
+		params.getPageParam().setPageIndex(pageNumber == null ? 0 : pageNumber);
+		params.getPageParam().setPageSize(pageSize == null ? 30 : pageSize);
 		params.setText(text);
 		
 		AppServiceResult<PageDto<ProductShortDto>> result = productService.searchByFTS(params);
