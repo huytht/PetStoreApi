@@ -291,6 +291,7 @@ public class ProductServiceImpl implements ProductService{
 			pageInfo.setCurrentPage(params.getPageParam().getPageIndex());
 			pageInfo.setPageSize(params.getPageParam().getPageSize());
 			pageInfo.setTotalElements((long) jpaQuery.getResultSize());
+			pageInfo.setTotalPage((int)(Math.ceil((double)pageInfo.getTotalElements() / pageInfo.getPageSize())));
 
 			result.setPageInfo(pageInfo);
 
