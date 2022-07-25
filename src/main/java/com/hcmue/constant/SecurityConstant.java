@@ -18,7 +18,7 @@ public class SecurityConstant {
 	public final static Long REFRESH_EXPIRATION_TIME = 604800000L;
 	
 	public final static String[] PUBLIC_URLS = { "/user/register", 
-			"/user/login", "/user/verify/**", "/user/image/profile/**", "/user/image/**" ,"/user/image/**/**", "/user/reset-password/**", "/user/refresh-token", "/pay"};
+			"/user/login", "/user/verify/**", "/user/image/profile/**", "/user/image/**" ,"/user/image/**/**", "/user/reset-password/**", "/user/refresh-token", "/pay/**"};
 	
 	public final static String[] PUBLIC_GET_URLS = {
 			"/product/**",

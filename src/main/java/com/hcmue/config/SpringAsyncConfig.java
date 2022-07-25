@@ -9,6 +9,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableAsync
@@ -33,6 +34,11 @@ public class SpringAsyncConfig implements AsyncConfigurer {
 		threadPoolTaskExecutor.setCorePoolSize(2);
 		threadPoolTaskExecutor.setMaxPoolSize(10);
 		return threadPoolTaskExecutor;
+	}
+	
+	@Bean
+	public RestTemplate restTemplate() {
+	    return new RestTemplate();
 	}
 
 	@Override
