@@ -30,6 +30,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "`order`")
@@ -37,6 +38,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Order implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -69,7 +71,8 @@ public class Order implements Serializable {
 	@JoinColumn(name = "user_id", nullable = true)
 	private AppUser user;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy="order")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "order_id", referencedColumnName =  "id", insertable = false, updatable = false)
 	private Set<OrderItem> orderItems;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -86,17 +89,6 @@ public class Order implements Serializable {
 
     @Column(name = "last_updated")
     @UpdateTimestamp
-    private Date lastUpdated;
-	
-	public void add(OrderItem item) {
-		if (item != null) {
-			if (orderItems == null) {
-				orderItems = new HashSet<OrderItem>();
-			}
-		}
-		orderItems.add(item);
-		item.setOrder(this);
-	}
-	
-
+    private Date lastUpdated;	
+    
 }

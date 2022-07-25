@@ -32,10 +32,10 @@ public class OrderItemDto {
 		OrderItemDto dto = new OrderItemDto();
 		dto.price = src.getPrice();
 		dto.quantity = src.getQuantity();
-		if (src.getProduct() != null) {
-			dto.name = src.getProduct().getName();
-			dto.imageUrl = src.getProduct().getProductImages().iterator().next().getImagePath();	
-		}
+//		if (src.getProduct() != null) {
+//			dto.name = src.getProduct().getName();
+//			dto.imageUrl = src.getProduct().getProductImages().iterator().next().getImagePath();	
+//		}
 		
 		
 		return dto;

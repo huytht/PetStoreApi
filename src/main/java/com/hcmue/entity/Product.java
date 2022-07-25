@@ -92,5 +92,4 @@ public class Product implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	private List<ProductImages> productImages = new ArrayList<>();
 	
-
 }
