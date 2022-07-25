@@ -38,8 +38,8 @@ public class VerificationToken implements Serializable {
 	@JoinColumn(name = "user_id", nullable = false)
 	private AppUser appUser;
 
-	@Column(name = "token", columnDefinition = "uniqueidentifier")
-	private UUID token;
+	@Column(name = "token")
+	private String token;
 
 	@CreationTimestamp
 	@Column(name = "date_new")

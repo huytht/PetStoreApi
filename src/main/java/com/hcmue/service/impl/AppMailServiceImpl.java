@@ -54,7 +54,7 @@ public class AppMailServiceImpl implements AppMailService {
 	@Async("threadPoolTaskExecutorForVerifyEmail")
 	public void sendMailVerify(AppUser appUser) {
 		VerificationToken vToken = new VerificationToken();
-		vToken.setToken(UUID.randomUUID());
+		vToken.setToken(UUID.randomUUID().toString());
 		vToken.setAppUser(appUser);
 		vToken.setDateNew(AppUtils.getNow());
 		vToken.setIsVerify(Boolean.FALSE);
@@ -62,7 +62,7 @@ public class AppMailServiceImpl implements AppMailService {
 
 		verificationTokenRepository.save(vToken);
 
-		boolean isSuccess = sendVerifyEmailRegister(appUser.getEmail(), vToken.getToken().toString());
+		boolean isSuccess = sendVerifyEmailRegister(appUser.getEmail(), vToken.getToken());
 
 		vToken.setIsSend(isSuccess);
 		vToken.setLastTime(AppUtils.getNow());

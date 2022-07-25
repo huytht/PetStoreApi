@@ -24,7 +24,7 @@ public interface AppUserService {
 	
 	AppBaseResult register(UserRegister userRegister);
 
-	AppBaseResult verifyEmail(UUID token);
+	AppBaseResult verifyEmail(String token);
 	
 	AppServiceResult<UserInfoDtoRes> getProfile(Long userId);
 	

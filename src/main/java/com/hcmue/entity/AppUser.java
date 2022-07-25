@@ -89,15 +89,5 @@ public class AppUser implements Serializable {
 
 	@Column(name = "user_edit")
 	private String userEdit;
-	
-	public void add(Order order) {
-		if (order != null) {
-			if (orders == null) {
-				orders = new HashSet<>();
-			}
-		}
-		orders.add(order);
-		order.setUser(this);
-	}
 
 }

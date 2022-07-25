@@ -173,7 +173,7 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 	}
 
 	@Override
-	public AppBaseResult verifyEmail(UUID token) {
+	public AppBaseResult verifyEmail(String token) {
 		VerificationToken vToken = verificationTokenRepository.findByToken(token);
 
 		if (vToken != null) {

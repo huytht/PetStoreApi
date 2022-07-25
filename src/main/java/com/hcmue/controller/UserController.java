@@ -110,7 +110,7 @@ public class UserController {
 	}
 
 	@GetMapping("/verify/{token}")
-	public ResponseEntity<Void> verifyEmail(@PathVariable(name = "token", required = true) UUID token) {
+	public ResponseEntity<Void> verifyEmail(@PathVariable(name = "token", required = true) String token) {
 
 		AppBaseResult result = appUserService.verifyEmail(token);
 //		String url = urlLoginApp + (result.isSuccess() ? "=success" : "=fail");
