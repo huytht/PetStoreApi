@@ -30,6 +30,8 @@ public class OrderDto {
 	
 	private OrderStatusDto orderStatus;
 	
+	private Long paymentId;
+	
 	private List<OrderItemDto> orderItems = new ArrayList<OrderItemDto>();
 	
 	private AddressDto shippingAddress;
@@ -42,6 +44,8 @@ public class OrderDto {
 		dto.totalPrice = src.getTotalPrice();
 		dto.totalQuantity = src.getTotalQuantity();
 		dto.orderStatus = OrderStatusDto.CreateFromEntity(src.getOrderStatus());
+		if (src.getPayment() != null)
+			dto.paymentId = src.getPayment().getId();
 		if (!src.getOrderItems().isEmpty())
 			for (OrderItem item : src.getOrderItems()) {
 				dto.orderItems.add(OrderItemDto.CreateFromEntity(item));
