@@ -13,7 +13,7 @@ public class SecurityConstant {
 	
 	public final static String APPLICATION_NAME = "PetStore";
 	
-	public final static Long EXPIRATION_TIME = 300000L;
+	public final static Long EXPIRATION_TIME = 86400000L;
 	
 	public final static Long REFRESH_EXPIRATION_TIME = 604800000L;
 	
@@ -30,10 +30,6 @@ public class SecurityConstant {
 	
 	public final static String[] REQUIRE_ADMIN_ROLE_URLS = {
 //			"/user/update-status",
-//			"/user/admin/**",
-//			"/album/admin/**",
-//			"/playlist/admin/**",
-//			"/track/deactive/**",
 //			"/app-status/**",
 	};
 }

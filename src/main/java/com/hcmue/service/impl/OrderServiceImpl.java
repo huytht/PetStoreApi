@@ -1,5 +1,6 @@
 package com.hcmue.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import com.hcmue.constant.AppError;
 import com.hcmue.domain.AppBaseResult;
 import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.order.OrderDto;
+import com.hcmue.dto.order.OrderStatusDto;
 import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.entity.AppUser;
@@ -62,6 +64,29 @@ public class OrderServiceImpl implements OrderService{
 			e.printStackTrace();
 
 			return new AppServiceResult<PageDto<OrderDto>>(false, AppError.Unknown.errorCode(),
+					AppError.Unknown.errorMessage(), null);
+		}
+	}
+	
+	@Override
+	public AppServiceResult<List<OrderDto>> getListAllOrder(Long orderStatus) {
+		
+		try {
+			
+			List<Order> orders = orderStatus == 0 
+									? orderRepository.findAllByOrderByOrderDateDesc() 
+									: orderRepository.findAllByOrderStatusIdOrderByOrderDateDesc(orderStatus);
+			List<OrderDto> dtoList = new ArrayList<OrderDto>();
+			if (orders != null && orders.size() > 0)
+				orders.forEach(item -> dtoList.add(OrderDto.CreateFromEntity(item)));
+					
+			
+			return new AppServiceResult<List<OrderDto>>(true, 0, "Succeed!", dtoList);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+
+			return new AppServiceResult<List<OrderDto>>(false, AppError.Unknown.errorCode(),
 					AppError.Unknown.errorMessage(), null);
 		}
 	}

@@ -12,10 +12,13 @@ import com.hcmue.constant.AppError;
 import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.breed.BreedDto;
 import com.hcmue.dto.category.CategoryDto;
+import com.hcmue.dto.order.OrderStatusDto;
 import com.hcmue.entity.Breed;
 import com.hcmue.entity.Category;
+import com.hcmue.entity.OrderStatus;
 import com.hcmue.repository.BreedRepository;
 import com.hcmue.repository.CategoryRepository;
+import com.hcmue.repository.OrderStatusRepository;
 import com.hcmue.repository.ProductRepository;
 import com.hcmue.service.CommonService;
 
@@ -27,13 +30,15 @@ public class CommonServiceImpl implements CommonService{
 	private ProductRepository productRepository;
 	private CategoryRepository categoryRepository;
 	private BreedRepository breedRepository;
+	private OrderStatusRepository orderStatusRepository;
 	
 	@Autowired
 	public CommonServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository,
-			BreedRepository breedRepository) {
+			BreedRepository breedRepository, OrderStatusRepository orderStatusRepository) {
 		this.productRepository = productRepository;
 		this.categoryRepository = categoryRepository;
 		this.breedRepository = breedRepository;
+		this.orderStatusRepository = orderStatusRepository;
 	};
 	
 
@@ -83,6 +88,25 @@ public class CommonServiceImpl implements CommonService{
 					AppError.Unknown.errorMessage(), null);
 		}
 		
+	}
+
+
+	@Override
+	public AppServiceResult<List<OrderStatusDto>> getOrderStatusList() {
+		
+		try {
+			List<OrderStatus> orderStatusList = orderStatusRepository.findAll();
+			List<OrderStatusDto> result = new ArrayList<OrderStatusDto>();
+			
+			if (orderStatusList != null && orderStatusList.size() > 0)
+				orderStatusList.forEach(item -> result.add(OrderStatusDto.CreateFromEntity(item)));
+			
+			return new AppServiceResult<List<OrderStatusDto>>(true, 0, "Succeed!", result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new AppServiceResult<List<OrderStatusDto>>(false, AppError.Unknown.errorCode(),
+					AppError.Unknown.errorMessage(), null);
+		}
 	}
 
 }

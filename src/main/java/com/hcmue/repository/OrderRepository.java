@@ -14,6 +14,8 @@ import com.hcmue.entity.Order;
 public interface OrderRepository extends JpaRepository<Order, Long> {	
 	public Page<Order> findAllByUserIdAndOrderStatusIdOrderByOrderDateDesc(Long userId, Long orderStatusId, Pageable pageable);
 	public Page<Order> findAllByUserIdOrderByOrderDateDesc(Long userId, Pageable pageable);
+	public List<Order> findAllByOrderStatusIdOrderByOrderDateDesc(Long orderStatusId);
+	public List<Order> findAllByOrderByOrderDateDesc();
 	public Order findByOrderTrackingNumber(String orderTrackingNumber);
 	
 	@Query("SELECT o FROM Order o WHERE orderStatus.id = 1 and user.id = :userId ORDER BY o.id DESC")
