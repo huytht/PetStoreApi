@@ -5,9 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
 
 import com.hcmue.constant.FileConstant;
 import com.hcmue.constant.SecurityConstant;
@@ -50,6 +57,7 @@ import com.hcmue.dto.user.UserRegister;
 import com.hcmue.dto.user.UserStatus;
 import com.hcmue.dto.userinfo.UserInfoDtoReq;
 import com.hcmue.dto.userinfo.UserInfoDtoRes;
+import com.hcmue.entity.AppUser;
 import com.hcmue.entity.RefreshToken;
 import com.hcmue.handle.exception.TokenRefreshException;
 import com.hcmue.infrastructure.AppJwtTokenProvider;
@@ -98,6 +106,35 @@ public class UserController {
 		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<List<AppUserForAdminDto>>(result.getData()))
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
+	
+	@GetMapping("/export")
+    public void exportToCSV(HttpServletResponse response) throws IOException {
+        response.setContentType("text/csv");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        String currentDateTime = dateFormatter.format(new Date());
+         
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=users_" + currentDateTime + ".csv";
+        response.setHeader(headerKey, headerValue);
+         
+//        AppServiceResult<List<AppUserForAdminDto>> result = appUserService.getUsers();
+//        List<AppUserForAdminDto> listUsers = result.getData();
+        AppServiceResult<List<AppUser>> result = appUserService.getUserList();
+        List<AppUser> listUsers = result.getData();
+ 
+        ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
+        String[] csvHeader = {"User ID", "E-mail"};
+        String[] nameMapping = {"id", "email"};
+         
+        csvWriter.writeHeader(csvHeader);
+         
+        for (AppUser user : listUsers) {
+            csvWriter.write(user, nameMapping);
+        }
+         
+        csvWriter.close();
+         
+    }
 	
 	@PostMapping("/register")
 	public ResponseEntity<HttpResponse> register(@Valid @RequestBody UserRegister userRegister) {

@@ -16,11 +16,14 @@ import com.hcmue.dto.user.UserRegister;
 import com.hcmue.dto.user.UserStatus;
 import com.hcmue.dto.userinfo.UserInfoDtoReq;
 import com.hcmue.dto.userinfo.UserInfoDtoRes;
+import com.hcmue.entity.AppUser;
 import com.hcmue.provider.file.UnsupportedFileTypeException;
 
 public interface AppUserService {
 	
 	AppServiceResult<List<AppUserForAdminDto>> getUsers();
+	
+	AppServiceResult<List<AppUser>> getUserList();
 	
 	AppBaseResult register(UserRegister userRegister);
 

@@ -465,4 +465,17 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 			return AppBaseResult.GenarateIsFailed(AppError.Unknown.errorCode(), AppError.Unknown.errorMessage());
 		}
 	}
+
+	@Override
+	public AppServiceResult<List<AppUser>> getUserList() {
+		try {
+			List<AppUser> users = appUserRepository.findAll();
+			
+			return new AppServiceResult<List<AppUser>>(true, 0, "Succeed!", users);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new AppServiceResult<List<AppUser>>(false, AppError.Unknown.errorCode(),
+					AppError.Unknown.errorMessage(), null);
+		}
+	}
 }
