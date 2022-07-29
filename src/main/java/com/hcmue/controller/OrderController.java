@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +41,7 @@ public class OrderController {
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
 	
-	@PostMapping("/confirm")
+	@PutMapping("/confirm")
 	public ResponseEntity<HttpResponse> confirmOrder(@RequestParam(name = "order-tracking-number") String orderTrackingNumber) {
 		AppBaseResult result = orderService.updateOrderStatus(orderTrackingNumber, (long)3);
 		
@@ -48,7 +49,7 @@ public class OrderController {
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
 	
-	@PostMapping("/cancel")
+	@PutMapping("/cancel")
 	public ResponseEntity<HttpResponse> cancelOrder(@RequestParam(name = "order-tracking-number") String orderTrackingNumber) {
 		AppBaseResult result = orderService.updateOrderStatus(orderTrackingNumber, (long)5);
 		
