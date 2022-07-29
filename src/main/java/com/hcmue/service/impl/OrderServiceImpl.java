@@ -13,7 +13,6 @@ import com.hcmue.constant.AppError;
 import com.hcmue.domain.AppBaseResult;
 import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.order.OrderDto;
-import com.hcmue.dto.order.OrderStatusDto;
 import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.entity.AppUser;
@@ -137,6 +136,27 @@ public class OrderServiceImpl implements OrderService{
 
 			return new AppServiceResult<OrderDto>(false, AppError.Unknown.errorCode(),
 					AppError.Unknown.errorMessage(), null);
+		}
+	}
+
+	@Override
+	public AppBaseResult deleteOrder(Long id) {
+		try {
+
+			Order order = orderRepository.findById(id).orElse(null);
+			if (order != null) {
+				orderRepository.delete(order);
+				return AppBaseResult.GenarateIsSucceed();
+			} else {
+				logger.warn("Order is not exist: " + String.valueOf(id) + ", Cannot further process!");
+				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
+						"Order is not exist: " + String.valueOf(id));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return AppBaseResult.GenarateIsFailed(AppError.Unknown.errorCode(), AppError.Unknown.errorMessage());
 		}
 	}
 

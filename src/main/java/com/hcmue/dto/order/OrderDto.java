@@ -19,6 +19,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDto {
+	
+	private Long id;
 
 	private String orderTrackingNumber;
 	
@@ -39,6 +41,7 @@ public class OrderDto {
 	public static OrderDto CreateFromEntity(Order src) {
 		OrderDto dto = new OrderDto();
 
+		dto.id = src.getId();
 		dto.orderTrackingNumber = src.getOrderTrackingNumber();
 		dto.orderDate = src.getOrderDate();
 		dto.totalPrice = src.getTotalPrice();

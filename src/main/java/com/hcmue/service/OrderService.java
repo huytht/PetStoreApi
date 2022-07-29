@@ -17,4 +17,6 @@ public interface OrderService {
 	AppBaseResult updateOrderStatus(String orderTrackingNumber, Long orderStatusId);
 	
 	AppServiceResult<OrderDto> getLatestUnpaidOrder(Long userId);
+	
+	AppBaseResult deleteOrder(Long id);
 }
