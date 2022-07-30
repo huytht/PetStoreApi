@@ -37,6 +37,7 @@ import com.hcmue.entity.AppUserProduct;
 import com.hcmue.entity.AppUserProductId;
 import com.hcmue.entity.Breed;
 import com.hcmue.entity.Category;
+import com.hcmue.entity.Order;
 import com.hcmue.entity.Origin;
 import com.hcmue.entity.Product;
 import com.hcmue.entity.ProductImages;
@@ -370,4 +371,75 @@ public class ProductServiceImpl implements ProductService{
 		}
 	}
 
+	@Override
+	public AppServiceResult<List<ProductDto>> getCatList() {
+		try {
+			List<Product> products = productRepository.findAllCat();
+			List<ProductDto> result = new ArrayList<ProductDto>();
+			
+			if (products != null && products.size() > 0)
+				products.forEach(item -> result.add(ProductDto.CreateFromEntity(item)));
+			
+			return new AppServiceResult<List<ProductDto>>(true, 0, "Succeed!", result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new AppServiceResult<List<ProductDto>>(false, AppError.Unknown.errorCode(),
+					AppError.Unknown.errorMessage(), null);
+		}
+	}
+
+	@Override
+	public AppServiceResult<List<ProductDto>> getDogList() {
+		try {
+			List<Product> products = productRepository.findAllDog();
+			List<ProductDto> result = new ArrayList<ProductDto>();
+			
+			if (products != null && products.size() > 0)
+				products.forEach(item -> result.add(ProductDto.CreateFromEntity(item)));
+			
+			return new AppServiceResult<List<ProductDto>>(true, 0, "Succeed!", result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new AppServiceResult<List<ProductDto>>(false, AppError.Unknown.errorCode(),
+					AppError.Unknown.errorMessage(), null);
+		}
+	}
+
+	@Override
+	public AppServiceResult<List<ProductDto>> getProductList() {
+		try {
+			List<Product> products = productRepository.findAllProduct();
+			List<ProductDto> result = new ArrayList<ProductDto>();
+			
+			if (products != null && products.size() > 0)
+				products.forEach(item -> result.add(ProductDto.CreateFromEntity(item)));
+			
+			return new AppServiceResult<List<ProductDto>>(true, 0, "Succeed!", result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new AppServiceResult<List<ProductDto>>(false, AppError.Unknown.errorCode(),
+					AppError.Unknown.errorMessage(), null);
+		}
+	}
+
+	@Override
+	public AppBaseResult deleteProduct(Long productId) {
+		try {
+
+			Product product = productRepository.findById(productId).orElse(null);
+			if (product != null) {
+				productRepository.delete(product);
+				return AppBaseResult.GenarateIsSucceed();
+			} else {
+				logger.warn("Product is not exist: " + String.valueOf(productId) + ", Cannot further process!");
+				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
+						"Product is not exist: " + String.valueOf(productId));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return AppBaseResult.GenarateIsFailed(AppError.Unknown.errorCode(), AppError.Unknown.errorMessage());
+		}
+	}
 }

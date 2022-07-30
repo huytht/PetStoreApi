@@ -38,6 +38,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	public Page<Product> findAllProductExceptPet(Pageable pageable);
 	
 	@Transactional
+	@Query(value = "SELECT p FROM Product p WHERE p.category.id = 1")
+	public List<Product> findAllCat();
+	
+	@Transactional
+	@Query(value = "SELECT p FROM Product p WHERE p.category.id = 2")
+	public List<Product> findAllDog();
+	
+	@Transactional
+	@Query(value = "SELECT p FROM Product p WHERE p.category.id > 2")
+	public List<Product> findAllProduct();
+	
+	@Transactional
 	@Query(value = "SELECT app.product FROM AppUserProduct app WHERE app.appUser = :appUser AND app.favourite = true")
 	public Page<Product> findAllProductInWishList(AppUser appUser, Pageable pageable);
 }

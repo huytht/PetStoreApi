@@ -39,25 +39,23 @@ public class ProductCreate {
 	private Long categoryId;
 
 	public ProductCreate(String name, Long amount, String description, @NotEmpty MultipartFile[] imageFile,
-			Boolean status, Long categoryId, BigDecimal price) {
+			Long categoryId, BigDecimal price) {
 		this.name = name;
 		this.amount = amount;
 		this.description = description;
 		this.imageFile = imageFile;
-		this.status = status;
 		this.categoryId = categoryId;
 		this.price = price;
 	}
 
 	public ProductCreate(String name, Long amount, String description, @NotEmpty MultipartFile[] imageFile,
-			Boolean gender, Integer age, Boolean status, Long breedId, Long[] originIds, Long categoryId, BigDecimal price) {
+			Boolean gender, Integer age, Long breedId, Long[] originIds, Long categoryId, BigDecimal price) {
 		this.name = name;
 		this.amount = amount;
 		this.description = description;
 		this.imageFile = imageFile;
 		this.gender = gender;
 		this.age = age;
-		this.status = status;
 		this.breedId = breedId;
 		this.originIds = originIds;
 		this.categoryId = categoryId;

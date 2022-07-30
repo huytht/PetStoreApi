@@ -1,11 +1,13 @@
 package com.hcmue.controller;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +18,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hcmue.provider.file.UnsupportedFileTypeException;
 import com.hcmue.domain.FullTextSearchWithPagingParam;
 import com.hcmue.util.StringUtil;
+import com.hcmue.domain.AppBaseResult;
 import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.HttpResponse;
 import com.hcmue.dto.HttpResponseError;
 import com.hcmue.dto.HttpResponseSuccess;
+import com.hcmue.dto.order.OrderDto;
 import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductDto;
@@ -75,7 +79,6 @@ public class ProductController {
 			@RequestParam(value = "description") String description,
 			@RequestParam(value = "imageFiles") MultipartFile[] imageFile,
 			@RequestParam(value = "gender", required = false) Boolean gender,
-			@RequestParam(value = "status") Boolean status,
 			@RequestParam(value = "breedId", required = false) Long breedId,
 			@RequestParam(value = "categoryId") Long categoryId,
 			@RequestParam(value = "price") BigDecimal price,
@@ -83,7 +86,7 @@ public class ProductController {
 			@RequestParam(value = "originIds", required = false) Long[] originIds)
 			throws UnsupportedFileTypeException {
 
-		ProductCreate newProduct = new ProductCreate(name, amount, description, imageFile, gender, age, status, breedId, originIds, categoryId, price);
+		ProductCreate newProduct = new ProductCreate(name, amount, description, imageFile, gender, age, breedId, originIds, categoryId, price);
 
 		AppServiceResult<ProductDto> result = productService.addProduct(newProduct);
 
@@ -125,4 +128,38 @@ public class ProductController {
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
 	
+	@GetMapping("/list/cat")
+	public ResponseEntity<HttpResponse> getCatList() {
+		
+		AppServiceResult<List<ProductDto>> result = productService.getCatList();
+		
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<List<ProductDto>>(result.getData()))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
+	
+	@GetMapping("/list/dog")
+	public ResponseEntity<HttpResponse> getDogList() {
+		
+		AppServiceResult<List<ProductDto>> result = productService.getDogList();
+		
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<List<ProductDto>>(result.getData()))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
+	
+	@GetMapping("/list/product")
+	public ResponseEntity<HttpResponse> getProductList() {
+		
+		AppServiceResult<List<ProductDto>> result = productService.getProductList();
+		
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<List<ProductDto>>(result.getData()))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
+
+	@DeleteMapping
+	public ResponseEntity<HttpResponse> deleteProduct(@RequestParam(name = "product-id") Long productId) {
+		AppBaseResult result = productService.deleteProduct(productId);
+		
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<String>("Succeed!"))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
 }

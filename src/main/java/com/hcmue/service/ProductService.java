@@ -34,4 +34,12 @@ public interface ProductService {
 	AppBaseResult updateWishList(Long productId);
 	
 	AppServiceResult<PageDto<ProductShortDto>> getWishList(PageParam pageParam);
+	
+	AppServiceResult<List<ProductDto>> getCatList();
+	
+	AppServiceResult<List<ProductDto>> getDogList();
+	
+	AppServiceResult<List<ProductDto>> getProductList();
+	
+	AppBaseResult deleteProduct(Long productId);
 }

@@ -89,7 +89,7 @@ public class Product implements Serializable {
 	@JoinColumn(name = "category_id", nullable = true)
 	private Category category;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.ALL})
 	private List<ProductImages> productImages = new ArrayList<>();
 	
 }
