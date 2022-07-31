@@ -21,6 +21,7 @@ import com.hcmue.dto.HttpResponseSuccess;
 import com.hcmue.dto.breed.BreedDto;
 import com.hcmue.dto.category.CategoryDto;
 import com.hcmue.dto.order.OrderStatusDto;
+import com.hcmue.dto.origin.OriginDto;
 import com.hcmue.dto.product.ProductDto;
 import com.hcmue.entity.Breed;
 import com.hcmue.service.CommonService;
@@ -61,6 +62,24 @@ public class CommonController {
 		AppServiceResult<List<Breed>> result = commonService.getAllBreedByCategory(categoryId);
 
 		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<List<Breed>>(result.getData()))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
+	
+	@GetMapping(path = "/list/all/breed")
+	public ResponseEntity<HttpResponse> getListBreed() {
+		
+		AppServiceResult<List<BreedDto>> result = commonService.getBreedList();
+
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<List<BreedDto>>(result.getData()))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
+	
+	@GetMapping(path = "/list/origin")
+	public ResponseEntity<HttpResponse> getListOrigin() {
+		
+		AppServiceResult<List<OriginDto>> result = commonService.getOriginList();
+
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<List<OriginDto>>(result.getData()))
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
 	

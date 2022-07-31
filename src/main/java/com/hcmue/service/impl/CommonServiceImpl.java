@@ -13,12 +13,15 @@ import com.hcmue.domain.AppServiceResult;
 import com.hcmue.dto.breed.BreedDto;
 import com.hcmue.dto.category.CategoryDto;
 import com.hcmue.dto.order.OrderStatusDto;
+import com.hcmue.dto.origin.OriginDto;
 import com.hcmue.entity.Breed;
 import com.hcmue.entity.Category;
 import com.hcmue.entity.OrderStatus;
+import com.hcmue.entity.Origin;
 import com.hcmue.repository.BreedRepository;
 import com.hcmue.repository.CategoryRepository;
 import com.hcmue.repository.OrderStatusRepository;
+import com.hcmue.repository.OriginRepository;
 import com.hcmue.repository.ProductRepository;
 import com.hcmue.service.CommonService;
 
@@ -31,14 +34,16 @@ public class CommonServiceImpl implements CommonService{
 	private CategoryRepository categoryRepository;
 	private BreedRepository breedRepository;
 	private OrderStatusRepository orderStatusRepository;
+	private OriginRepository originRepository;
 	
 	@Autowired
 	public CommonServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository,
-			BreedRepository breedRepository, OrderStatusRepository orderStatusRepository) {
+			BreedRepository breedRepository, OrderStatusRepository orderStatusRepository, OriginRepository originRepository) {
 		this.productRepository = productRepository;
 		this.categoryRepository = categoryRepository;
 		this.breedRepository = breedRepository;
 		this.orderStatusRepository = orderStatusRepository;
+		this.originRepository = originRepository;
 	};
 	
 
@@ -105,6 +110,41 @@ public class CommonServiceImpl implements CommonService{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new AppServiceResult<List<OrderStatusDto>>(false, AppError.Unknown.errorCode(),
+					AppError.Unknown.errorMessage(), null);
+		}
+	}
+
+
+	@Override
+	public AppServiceResult<List<OriginDto>> getOriginList() {
+		try {
+			List<Origin> originList = originRepository.findAll();
+			List<OriginDto> result = new ArrayList<OriginDto>();
+			
+			if (originList != null && originList.size() > 0)
+				originList.forEach(item -> result.add(OriginDto.CreateFromEntity(item)));
+			
+			return new AppServiceResult<List<OriginDto>>(true, 0, "Succeed!", result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new AppServiceResult<List<OriginDto>>(false, AppError.Unknown.errorCode(),
+					AppError.Unknown.errorMessage(), null);
+		}
+	}
+	
+	@Override
+	public AppServiceResult<List<BreedDto>> getBreedList() {
+		try {
+			List<Breed> breedList = breedRepository.findAll();
+			List<BreedDto> result = new ArrayList<BreedDto>();
+			
+			if (breedList != null && breedList.size() > 0)
+				breedList.forEach(item -> result.add(BreedDto.CreateFromEntity(item)));
+			
+			return new AppServiceResult<List<BreedDto>>(true, 0, "Succeed!", result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new AppServiceResult<List<BreedDto>>(false, AppError.Unknown.errorCode(),
 					AppError.Unknown.errorMessage(), null);
 		}
 	}
