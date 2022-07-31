@@ -9,6 +9,7 @@ import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductDto;
 import com.hcmue.dto.product.ProductShortDto;
+import com.hcmue.dto.product.ProductUpdate;
 import com.hcmue.dto.user.RemarkProduct;
 import com.hcmue.dto.product.ProductCreate;
 import com.hcmue.provider.file.UnsupportedFileTypeException;
@@ -40,6 +41,10 @@ public interface ProductService {
 	AppServiceResult<List<ProductDto>> getDogList();
 	
 	AppServiceResult<List<ProductDto>> getProductList();
+	
+	AppBaseResult updateAmountInInventory(Long productId, Long amount);
+	
+	AppBaseResult updateProduct(Long productId, ProductUpdate product) throws UnsupportedFileTypeException;
 	
 	AppBaseResult deleteProduct(Long productId);
 }

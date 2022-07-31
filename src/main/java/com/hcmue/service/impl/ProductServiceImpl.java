@@ -30,6 +30,7 @@ import com.hcmue.dto.pagination.PageInfo;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductDto;
 import com.hcmue.dto.product.ProductShortDto;
+import com.hcmue.dto.product.ProductUpdate;
 import com.hcmue.dto.user.RemarkProduct;
 import com.hcmue.dto.product.ProductCreate;
 import com.hcmue.entity.AppUser;
@@ -37,7 +38,6 @@ import com.hcmue.entity.AppUserProduct;
 import com.hcmue.entity.AppUserProductId;
 import com.hcmue.entity.Breed;
 import com.hcmue.entity.Category;
-import com.hcmue.entity.Order;
 import com.hcmue.entity.Origin;
 import com.hcmue.entity.Product;
 import com.hcmue.entity.ProductImages;
@@ -198,6 +198,88 @@ public class ProductServiceImpl implements ProductService{
 		}
 	}
 
+	@Override
+	public AppBaseResult updateProduct(Long productId, ProductUpdate product) throws UnsupportedFileTypeException {
+		try {
+			Product existProduct = productRepository.findById(productId).orElse(null);
+			if (product != null) {
+				existProduct.setName(product.getName());
+				if (product.getBreedId() != null) {
+					Breed breed = breedRepository.findById(product.getBreedId()).orElse(null);
+					
+					if (breed == null) {
+						logger.warn("Breed Id: " + product.getBreedId() + " is not exist!");
+						
+						return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
+								"Breed is not exist: " + String.valueOf(product.getBreedId()));
+					} else
+						existProduct.setBreed(breed);
+				}
+				
+				if (product.getCategoryId() != null) {
+					Category category  = categoryRepository.findById(product.getCategoryId()).orElse(null);
+					
+					if (category == null) {
+						logger.warn("Category Id: " + product.getCategoryId() + " is not exist!");
+						
+						return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
+								"Category is not exist: " + String.valueOf(product.getCategoryId()));
+					} else
+						existProduct.setCategory(category);
+				}
+				existProduct.setPrice(product.getPrice());
+				existProduct.setDescription(product.getDescription());
+				if (product.getGender() != null)
+					existProduct.setGender(product.getGender());
+				
+				if (product.getAge() != null)
+					existProduct.setAge(product.getAge());
+				
+				if (product.getImageFile() != null) {
+					for (MultipartFile file : product.getImageFile()) {
+						MediaFile mediaFile = imageFileService.upload(existProduct.getName(), file);
+						ProductImages productImages = new ProductImages();
+						productImages.setImagePath(mediaFile.getPathUrl());
+						productImages.setProduct(existProduct);
+						existProduct.getProductImages().add(productImages);
+					}
+				}
+				if (product.getOriginIds() != null)
+					for (Long originId : product.getOriginIds()) {
+						Origin origin = originRepository.findById(originId).orElse(null);
+						if (origin == null) {
+							logger.warn("Origin id is not exist: " + originId + ". Can not handle farther!");
+		
+							throw new IllegalArgumentException("Origin id is not exist: " + originId);
+						} else
+							existProduct.getOrigins().add(origin);
+					}
+				
+				productRepository.save(existProduct);
+				return AppBaseResult.GenarateIsSucceed();
+			} else {
+				logger.warn("Product is not exist: " + String.valueOf(productId) + ", Cannot further process!");
+				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
+						"Product is not exist: " + String.valueOf(productId));
+			}
+			
+		} catch (UnsupportedFileTypeException e) {
+			e.printStackTrace();
+
+			throw e;
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+
+			return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
+					e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
+					AppError.Unknown.errorMessage());
+		}
+	}
+	
 	@Override
 	public AppServiceResult<PageDto<ProductShortDto>> getProductListByType(String typeOfProduct, PageParam pageParam) {
 		try {
@@ -429,6 +511,28 @@ public class ProductServiceImpl implements ProductService{
 			Product product = productRepository.findById(productId).orElse(null);
 			if (product != null) {
 				productRepository.delete(product);
+				return AppBaseResult.GenarateIsSucceed();
+			} else {
+				logger.warn("Product is not exist: " + String.valueOf(productId) + ", Cannot further process!");
+				return AppBaseResult.GenarateIsFailed(AppError.Validattion.errorCode(),
+						"Product is not exist: " + String.valueOf(productId));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return AppBaseResult.GenarateIsFailed(AppError.Unknown.errorCode(), AppError.Unknown.errorMessage());
+		}
+	}
+
+	@Override
+	public AppBaseResult updateAmountInInventory(Long productId, Long amount) {
+		try {
+			Product product = productRepository.findById(productId).orElse(null);
+			
+			if (product != null) {
+				product.setAmount(product.getAmount() != null ? product.getAmount() + amount : amount);
+				productRepository.save(product);
 				return AppBaseResult.GenarateIsSucceed();
 			} else {
 				logger.warn("Product is not exist: " + String.valueOf(productId) + ", Cannot further process!");

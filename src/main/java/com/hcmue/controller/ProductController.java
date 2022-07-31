@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +30,7 @@ import com.hcmue.dto.pagination.PageDto;
 import com.hcmue.dto.pagination.PageParam;
 import com.hcmue.dto.product.ProductDto;
 import com.hcmue.dto.product.ProductShortDto;
+import com.hcmue.dto.product.ProductUpdate;
 import com.hcmue.dto.user.RemarkProduct;
 import com.hcmue.dto.product.ProductCreate;
 import com.hcmue.service.ProductService;
@@ -152,6 +155,22 @@ public class ProductController {
 		AppServiceResult<List<ProductDto>> result = productService.getProductList();
 		
 		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<List<ProductDto>>(result.getData()))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
+	
+	@PutMapping("/amount")
+	public ResponseEntity<HttpResponse> updateAmount(@RequestParam(name = "product-id") Long productId, @RequestParam(name = "amount") Long amount) {
+		AppBaseResult result = productService.updateAmountInInventory(productId, amount);
+		
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<String>("Succeed!"))
+				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
+	}
+	
+	@PutMapping
+	public ResponseEntity<HttpResponse> update(@RequestParam(name = "product-id") Long productId, @RequestBody ProductUpdate productUpdate) throws UnsupportedFileTypeException {
+		AppBaseResult result = productService.updateProduct(productId, productUpdate);
+		
+		return result.isSuccess() ? ResponseEntity.ok(new HttpResponseSuccess<String>("Succeed!"))
 				: ResponseEntity.badRequest().body(new HttpResponseError(null, result.getMessage()));
 	}
 
