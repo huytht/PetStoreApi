@@ -30,6 +30,8 @@ public class AppUserForAdminDto {
 	
 	private UserInfoForAdminDtoRes userInfo;
 	
+	private String fullName;
+	
 	private Date dateNew;
 
 	private String userNew;
@@ -51,8 +53,10 @@ public class AppUserForAdminDto {
 		dest.userNew = src.getUserNew();
 		dest.userEdit = src.getUserEdit();
 			
-		if (src.getUserInfo() != null)
+		if (src.getUserInfo() != null) {
 			dest.userInfo = UserInfoForAdminDtoRes.CreateFromEntity(src.getUserInfo());
+			dest.fullName = src.getUserInfo().getLastName() + " " + src.getUserInfo().getFirstName();
+		}
 
 		if (src.getAppRoles() != null)
 			src.getAppRoles().forEach(item -> dest.appRoles.add(AppRoleDto.CreateFromEntity(item)));

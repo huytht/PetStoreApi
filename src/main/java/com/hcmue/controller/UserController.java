@@ -117,18 +117,15 @@ public class UserController {
         String headerValue = "attachment; filename=users_" + currentDateTime + ".csv";
         response.setHeader(headerKey, headerValue);
          
-//        AppServiceResult<List<AppUserForAdminDto>> result = appUserService.getUsers();
-//        List<AppUserForAdminDto> listUsers = result.getData();
-        AppServiceResult<List<AppUser>> result = appUserService.getUserList();
-        List<AppUser> listUsers = result.getData();
- 
+        AppServiceResult<List<AppUserForAdminDto>> result = appUserService.getUsers();
+        List<AppUserForAdminDto> listUsers = result.getData();
         ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
-        String[] csvHeader = {"User ID", "E-mail"};
-        String[] nameMapping = {"id", "email"};
+        String[] csvHeader = {"User ID", "E-mail", "Full Name"};
+        String[] nameMapping = {"id", "email", "fullName"};
          
         csvWriter.writeHeader(csvHeader);
          
-        for (AppUser user : listUsers) {
+        for (AppUserForAdminDto user : listUsers) {
             csvWriter.write(user, nameMapping);
         }
          
