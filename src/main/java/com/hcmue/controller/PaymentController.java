@@ -116,10 +116,9 @@ public class PaymentController {
 	public String successPay(@RequestParam("orderTrackingNumber") String orderTrackingNumber, 
 							@RequestParam(name = "paymentId", defaultValue = "") String paymentId, 
 							@RequestParam(name = "PayerID", defaultValue = "") String payerId) throws PayPalRESTException{
-//			Payment payment = null;
-//			if (paymentId != "" && payerId != "")
-//				payment = paypalService.executePayment(paymentId, payerId);
-//		OrderDto order = orderService.getLatestUnpaidOrder(userId).getData();
+		Payment payment = paymentId != "" && payerId != "" ? paypalService.executePayment(paymentId, payerId) : new Payment();
+		if (payment.getState().equals("approved"))
+			return "success";
 		orderService.updateOrderStatus(orderTrackingNumber, (long)2);
 
 		return "success";
