@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hcmue.config.PaypalPaymentIntent;
@@ -25,6 +26,12 @@ public class PaypalServiceImpl implements PaypalService{
 	@Autowired
 	private APIContext apiContext;
 	
+	@Value("${paypal.client.id}")
+	private String clientId;
+	
+	@Value("${paypal.client.secret}")
+	private String clientSecret;
+	
 	public Payment createPayment(
 			Double total,
 			String currency,
@@ -33,6 +40,7 @@ public class PaypalServiceImpl implements PaypalService{
 			String description,
 			String cancelUrl,
 			String successUrl) throws PayPalRESTException{
+		apiContext = new APIContext(clientId, clientSecret, "sandbox");
 		Amount amount = new Amount();
 		amount.setCurrency(currency);
 		amount.setTotal(String.format("%.2f", total));
