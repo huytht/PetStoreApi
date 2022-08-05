@@ -116,7 +116,7 @@ public class PaymentController {
 	public String successPay(@RequestParam("orderTrackingNumber") String orderTrackingNumber, 
 							@RequestParam(name = "paymentId", defaultValue = "") String paymentId, 
 							@RequestParam(name = "PayerID", defaultValue = "") String payerId) throws PayPalRESTException{
-		Payment payment = paymentId != "" && payerId != "" ? paypalService.executePayment(paymentId, payerId) : new Payment();
+		Payment payment = paypalService.executePayment(paymentId, payerId);
 
 		orderService.updateOrderStatus(orderTrackingNumber, (long)2);
 
