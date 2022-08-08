@@ -3,6 +3,7 @@ package com.hcmue.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -40,7 +41,7 @@ public class AppUserProduct implements Serializable {
 	@JoinColumn(name = "app_user_id")
 	private AppUser appUser;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
 	@MapsId("productId")
 	@JoinColumn(name = "product_id")
 	private Product product;

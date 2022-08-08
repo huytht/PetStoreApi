@@ -46,7 +46,7 @@ public class OrderItem {
 	@Column(name = "order_id")
     private Long orderId;
 	
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinColumn(name = "product_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Product product;
 	
