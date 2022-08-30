@@ -145,6 +145,15 @@
 	<build>
 		<plugins>
 			<plugin>
+			   <groupId>com.google.cloud.tools</groupId>
+			   <artifactId>appengine-maven-plugin</artifactId>
+			   <version>2.4.3</version>
+			   <configuration>
+				  <deploy.projectId>pet-store-online</deploy.projectId>
+				  <deploy.version>GCLOUD_CONFIG</deploy.version>
+			 	</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
@@ -155,6 +164,33 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+			    <groupId>com.microsoft.azure</groupId>
+			    <artifactId>azure-webapp-maven-plugin</artifactId>
+			    <version>1.7.0</version>
+			    <configuration>
+			     <schemaVersion>v2</schemaVersion>
+			     <resourceGroup>maven-plugin</resourceGroup>
+			     <appName>pet-store-api</appName>
+			     <region>Southeast Asia</region>
+			     <runtime>
+			         <os>linux</os>
+			         <javaVersion>jre8</javaVersion>
+			         <webContainer></webContainer>
+			     </runtime>
+			     <deployment>
+			         <resources>
+			             <resource>
+			                 <directory>${project.basedir}/target</directory>
+			                 <includes>
+			                     <include>*.jar</include>
+			                 </includes>
+			             </resource>
+			         </resources>
+			     </deployment>
+			     <pricingTier>F1</pricingTier>
+			    </configuration>
 			</plugin>
 		</plugins>
 	</build>
