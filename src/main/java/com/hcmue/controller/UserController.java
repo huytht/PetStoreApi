@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -215,7 +216,7 @@ public class UserController {
 
 	@PostMapping("/upload-profile-image")
 	public ResponseEntity<HttpResponse> uploadImage(@RequestParam("profileImage") MultipartFile file)
-			throws UnsupportedFileTypeException {
+			throws UnsupportedFileTypeException, URISyntaxException {
 
 		AppServiceResult<String> result = appUserService.uploadImage(file);
 

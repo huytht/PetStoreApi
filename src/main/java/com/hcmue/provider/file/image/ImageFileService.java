@@ -4,6 +4,8 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,14 +37,15 @@ public final class ImageFileService implements FileService {
 	}
 
 	@Override
-	public MediaFile upload(String fileName, MultipartFile file) throws IOException, UnsupportedFileTypeException {
+	public MediaFile upload(String fileName, MultipartFile file) throws IOException, UnsupportedFileTypeException, URISyntaxException {
 
 		if (!Arrays.asList(mimeTypeSupport).contains(file.getContentType())) {
 			throw new UnsupportedFileTypeException(
 					file.getOriginalFilename() + " is not an image file: [" + String.join("; ", mimeTypeSupport) + "]");
 		}
-
-		Path imageFolder = Paths.get(FileConstant.IMAGE_FOLDER).toAbsolutePath().normalize();
+		URL res = getClass().getClassLoader().getResource("images");
+		
+		Path imageFolder = Paths.get(res.toURI()).toAbsolutePath().normalize();
 
 		if (!Files.exists(imageFolder)) {
 			Files.createDirectories(imageFolder);

@@ -70,14 +70,6 @@ public class MyFileController {
 	    return toByteArray(buff, "jpg");
 
 	}
-	
-//	@GetMapping(path = "/images/{fileName}", produces = IMAGE_JPEG_VALUE)
-//	public Mono<ResponseEntity<byte[]>> streamImage(
-//			@RequestHeader(value = "Range", required = false) String httpRangeList,
-//			@PathVariable("fileName") String fileName) {
-//		return Mono
-//				.just(getContent(FileConstant.IMAGE_FOLDER, fileName, httpRangeList));
-//	}
 
 	private ResponseEntity<byte[]> getContent(String location, String fileName, String range) {
 		long rangeStart = 0;

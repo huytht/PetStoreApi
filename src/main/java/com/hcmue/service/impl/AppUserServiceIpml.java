@@ -1,6 +1,7 @@
 package com.hcmue.service.impl;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -341,7 +342,7 @@ public class AppUserServiceIpml implements AppUserService, UserDetailsService {
 	}
 
 	@Override
-	public AppServiceResult<String> uploadImage(MultipartFile file) throws UnsupportedFileTypeException {
+	public AppServiceResult<String> uploadImage(MultipartFile file) throws UnsupportedFileTypeException, URISyntaxException {
 		try {
 			if (file != null) {
 

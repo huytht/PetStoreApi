@@ -1,5 +1,6 @@
  package com.hcmue.service;
 
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public interface AppUserService {
 	
 	UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 	
-	AppServiceResult<String> uploadImage(MultipartFile file) throws UnsupportedFileTypeException;
+	AppServiceResult<String> uploadImage(MultipartFile file) throws UnsupportedFileTypeException, URISyntaxException;
 	
 	AppBaseResult updateActive(UserStatus userStatus);
 }
