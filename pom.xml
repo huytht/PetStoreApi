@@ -173,7 +173,7 @@
 			     <schemaVersion>v2</schemaVersion>
 			     <resourceGroup>maven-plugin</resourceGroup>
 			     <appName>pet-store-api</appName>
-			     <region>Central US</region>
+			     <region>Southeast Asia</region>
 			     <runtime>
 			         <os>linux</os>
 			         <javaVersion>jre8</javaVersion>
