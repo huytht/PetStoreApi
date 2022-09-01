@@ -48,8 +48,8 @@ public final class ImageFileService implements FileService {
 		String URIString = res.toURI().toString();
 		int index = URIString.indexOf("file:");
 //		System.out.println("======>" + URIString.substring(index + 5));
-		Path imageFolder = Paths.get(res.toURI());
-//		System.out.println(imageFolder);
+		Path imageFolder = Paths.get(URIString.substring(URIString.indexOf("jar:") == 0 ? index + 5 : index + 6) + "/images/");
+		System.out.println(imageFolder);
 
 		if (!Files.exists(imageFolder)) {
 			Files.createDirectories(imageFolder);
