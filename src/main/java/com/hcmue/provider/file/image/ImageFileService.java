@@ -39,6 +39,7 @@ public final class ImageFileService implements FileService {
 	@Override
 	public MediaFile upload(String fileName, MultipartFile file) throws IOException, UnsupportedFileTypeException, URISyntaxException {
 
+		System.out.println("======>" + file.getOriginalFilename());
 		if (!Arrays.asList(mimeTypeSupport).contains(file.getContentType())) {
 			throw new UnsupportedFileTypeException(
 					file.getOriginalFilename() + " is not an image file: [" + String.join("; ", mimeTypeSupport) + "]");
