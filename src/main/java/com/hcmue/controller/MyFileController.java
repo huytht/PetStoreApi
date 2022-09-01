@@ -62,6 +62,7 @@ public class MyFileController {
 	    BufferedImage buff = null;
 	    try {
 	        buff = ImageIO.read(getClass().getResourceAsStream("/images/" + fileName));
+	        System.out.println(getClass().getResource("/images/" + fileName));
 	    } catch (IOException e) {
 	        // TODO Auto-generated catch block
 	        e.printStackTrace();
