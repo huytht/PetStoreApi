@@ -175,7 +175,7 @@
 			     <appName>pet-store-api</appName>
 			     <region>Central US</region>
 			     <runtime>
-			         <os>linux</os>
+			         <os>windows</os>
 			         <javaVersion>jre8</javaVersion>
 			         <webContainer></webContainer>
 			     </runtime>
