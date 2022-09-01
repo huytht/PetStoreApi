@@ -22,9 +22,12 @@ import com.hcmue.util.StringUtil;
 
 import reactor.core.publisher.Mono;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.nio.file.Path;
 import java.util.Optional;
+
+import javax.imageio.ImageIO;
 
 @RestController
 @RequestMapping("/myfile")
@@ -36,10 +39,36 @@ public class MyFileController {
 	public MyFileController() {
 	}
 
-	@GetMapping(path = "/images/{fileName}", produces = IMAGE_JPEG_VALUE)
-	public byte[] getImageFile(@PathVariable("fileName") String fileName) throws IOException, NoSuchFileException {
+//	@GetMapping(path = "/images/{fileName}", produces = IMAGE_JPEG_VALUE)
+//	public byte[] getImageFile(@PathVariable("fileName") String fileName) throws IOException, NoSuchFileException {
+//
+//		return Files.readAllBytes(Paths.get(FileConstant.IMAGE_FOLDER + fileName));
+//	}
+	
+	// convert BufferedImage to byte[]
+    public static byte[] toByteArray(BufferedImage bi, String format)
+        throws IOException {
 
-		return Files.readAllBytes(Paths.get(FileConstant.IMAGE_FOLDER + fileName));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bi, format, baos);
+        byte[] bytes = baos.toByteArray();
+        return bytes;
+
+    }
+	
+	@GetMapping(path = "/images/{fileName}", produces = IMAGE_JPEG_VALUE)
+	public byte[] loadImage(@PathVariable("fileName") String fileName) throws IOException{
+
+	    BufferedImage buff = null;
+	    try {
+	        buff = ImageIO.read(getClass().getResourceAsStream("/images/" + fileName));
+	    } catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	        return null;
+	    }
+	    return toByteArray(buff, "jpg");
+
 	}
 	
 //	@GetMapping(path = "/images/{fileName}", produces = IMAGE_JPEG_VALUE)
