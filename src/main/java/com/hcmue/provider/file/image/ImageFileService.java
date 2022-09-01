@@ -45,7 +45,7 @@ public final class ImageFileService implements FileService {
 					file.getOriginalFilename() + " is not an image file: [" + String.join("; ", mimeTypeSupport) + "]");
 		}
 		URL res = getClass().getResource("/images");
-		
+		System.out.println("======>" + res);
 		Path imageFolder = Paths.get(res.toURI());
 		System.out.println(imageFolder);
 
