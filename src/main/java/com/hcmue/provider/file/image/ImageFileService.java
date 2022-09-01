@@ -58,7 +58,7 @@ public final class ImageFileService implements FileService {
 		fileName = StringUtil.normalizeUri(fileName) + "-" + DateUtil.GetCurrentTimeMillis() + imageExtensionSave;
 
 		Files.deleteIfExists(Paths.get(imageFolder + "/" + fileName));
-		Files.copy(file.getInputStream(), Paths.get(imageFolder + "/" + fileName), REPLACE_EXISTING);
+		Files.copy(file.getInputStream(), imageFolder.resolve(fileName), REPLACE_EXISTING);
 
 		return new MediaFile(Paths.get(imageFolder.toString(), File.separator, fileName).toString(), 
 				FileConstant.USER_URL_PATH + fileName);
