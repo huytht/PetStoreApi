@@ -165,7 +165,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<!-- <plugin>
+			<plugin>
 			    <groupId>com.microsoft.azure</groupId>
 			    <artifactId>azure-webapp-maven-plugin</artifactId>
 			    <version>1.7.0</version>
@@ -175,8 +175,8 @@
 			     <appName>pet-store-api</appName>
 			     <region>Central US</region>
 			     <runtime>
-			         <os>windows</os>
-			         <javaVersion>Java 8</javaVersion>
+			         <os>linux</os>
+			         <javaVersion>jre8</javaVersion>
 			         <webContainer></webContainer>
 			     </runtime>
 			     <deployment>
@@ -191,7 +191,7 @@
 			     </deployment>
 			     <pricingTier>F1</pricingTier>
 			    </configuration>
-			</plugin>  -->
+			</plugin>
 		</plugins>
 	</build>
 
