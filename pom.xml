@@ -165,7 +165,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 			    <groupId>com.microsoft.azure</groupId>
 			    <artifactId>azure-webapp-maven-plugin</artifactId>
 			    <version>1.7.0</version>
@@ -176,7 +176,7 @@
 			     <region>Central US</region>
 			     <runtime>
 			         <os>windows</os>
-			         <javaVersion>jre8</javaVersion>
+			         <javaVersion>Java 8</javaVersion>
 			         <webContainer></webContainer>
 			     </runtime>
 			     <deployment>
@@ -191,7 +191,7 @@
 			     </deployment>
 			     <pricingTier>F1</pricingTier>
 			    </configuration>
-			</plugin>
+			</plugin>  -->
 		</plugins>
 	</build>
 
