@@ -43,9 +43,10 @@ public final class ImageFileService implements FileService {
 			throw new UnsupportedFileTypeException(
 					file.getOriginalFilename() + " is not an image file: [" + String.join("; ", mimeTypeSupport) + "]");
 		}
-		URL res = getClass().getClassLoader().getResource("images");
+		URL res = getClass().getResource("/images");
 		
-		Path imageFolder = Paths.get(res.toURI()).toAbsolutePath().normalize();
+		Path imageFolder = Paths.get(res.toURI());
+		System.out.println(imageFolder);
 
 		if (!Files.exists(imageFolder)) {
 			Files.createDirectories(imageFolder);
