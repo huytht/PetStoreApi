@@ -2,7 +2,7 @@ package com.hcmue.provider.file;
 
 public class FileConstant {
 	
-	private static final String BASE_FOLDER = System.getProperty("user.dir") + "/src/main/resources";
+	private static final String BASE_FOLDER = System.getProperty("user.home");
 
 //	private static final String BASE_FOLDER = getClass().getResource("/images/");
 	

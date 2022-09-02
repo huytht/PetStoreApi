@@ -3,7 +3,9 @@ package com.hcmue.provider.file.image;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -39,27 +41,28 @@ public final class ImageFileService implements FileService {
 	@Override
 	public MediaFile upload(String fileName, MultipartFile file) throws IOException, UnsupportedFileTypeException, URISyntaxException {
 
-//		System.out.println("======>" + file.getOriginalFilename());
 		if (!Arrays.asList(mimeTypeSupport).contains(file.getContentType())) {
 			throw new UnsupportedFileTypeException(
 					file.getOriginalFilename() + " is not an image file: [" + String.join("; ", mimeTypeSupport) + "]");
 		}
-		URL res = getClass().getResource("/images");
-		String URIString = res.toURI().toString();
-		int index = URIString.indexOf("file:");
-//		System.out.println("======>" + URIString.substring(index + 5));
-		Path imageFolder = Paths.get(URIString.substring(URIString.indexOf("jar:") == 0 ? index + 5 : index + 6));
-		System.out.println(imageFolder);
-
+//		URL res = getClass().getResource("/images");
+//		String URIString = res.toURI().toString();
+//		int index = URIString.indexOf("file:");
+//
+//		Path imageFolder = Paths.get(URIString.substring(URIString.indexOf("jar:") == 0 ? index + 5 : index + 6));
+//		System.out.println(imageFolder);
+		
+		Path imageFolder = Paths.get(FileConstant.IMAGE_FOLDER).toAbsolutePath().normalize();
+		
 		if (!Files.exists(imageFolder)) {
 			Files.createDirectories(imageFolder);
 		}
 
 		fileName = StringUtil.normalizeUri(fileName) + "-" + DateUtil.GetCurrentTimeMillis() + imageExtensionSave;
 
-		Files.deleteIfExists(Paths.get(imageFolder + "/" + fileName));
+		Files.deleteIfExists(Paths.get(imageFolder + fileName));
 		Files.copy(file.getInputStream(), imageFolder.resolve(fileName), REPLACE_EXISTING);
-
+		
 		return new MediaFile(Paths.get(imageFolder.toString(), File.separator, fileName).toString(), 
 				FileConstant.USER_URL_PATH + fileName);
 	}

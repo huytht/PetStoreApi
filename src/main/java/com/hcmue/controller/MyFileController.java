@@ -39,38 +39,38 @@ public class MyFileController {
 	public MyFileController() {
 	}
 
-//	@GetMapping(path = "/images/{fileName}", produces = IMAGE_JPEG_VALUE)
-//	public byte[] getImageFile(@PathVariable("fileName") String fileName) throws IOException, NoSuchFileException {
-//
-//		return Files.readAllBytes(Paths.get(FileConstant.IMAGE_FOLDER + fileName));
-//	}
+	@GetMapping(path = "/images/{fileName}", produces = IMAGE_JPEG_VALUE)
+	public byte[] getImageFile(@PathVariable("fileName") String fileName) throws IOException, NoSuchFileException {
+
+		return Files.readAllBytes(Paths.get(FileConstant.IMAGE_FOLDER + fileName));
+	}
 	
 	// convert BufferedImage to byte[]
-    public static byte[] toByteArray(BufferedImage bi, String format)
-        throws IOException {
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(bi, format, baos);
-        byte[] bytes = baos.toByteArray();
-        return bytes;
-
-    }
+//    public static byte[] toByteArray(BufferedImage bi, String format)
+//        throws IOException {
+//
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        ImageIO.write(bi, format, baos);
+//        byte[] bytes = baos.toByteArray();
+//        return bytes;
+//
+//    }
 	
-	@GetMapping(path = "/images/{fileName}", produces = IMAGE_JPEG_VALUE)
-	public byte[] loadImage(@PathVariable("fileName") String fileName) throws IOException{
-
-	    BufferedImage buff = null;
-	    try {
-	        buff = ImageIO.read(getClass().getResourceAsStream("/images/" + fileName));
-	        System.out.println(getClass().getResource("/images/" + fileName));
-	    } catch (IOException e) {
-	        // TODO Auto-generated catch block
-	        e.printStackTrace();
-	        return null;
-	    }
-	    return toByteArray(buff, "jpg");
-
-	}
+//	@GetMapping(path = "/images/{fileName}", produces = IMAGE_JPEG_VALUE)
+//	public byte[] loadImage(@PathVariable("fileName") String fileName) throws IOException{
+//
+//	    BufferedImage buff = null;
+//	    try {
+//	        buff = ImageIO.read(getClass().getResourceAsStream("/images/" + fileName));
+//	        System.out.println(getClass().getResource("/images/" + fileName));
+//	    } catch (IOException e) {
+//	        // TODO Auto-generated catch block
+//	        e.printStackTrace();
+//	        return null;
+//	    }
+//	    return toByteArray(buff, "jpg");
+//
+//	}
 
 	private ResponseEntity<byte[]> getContent(String location, String fileName, String range) {
 		long rangeStart = 0;
