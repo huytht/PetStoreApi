@@ -42,6 +42,7 @@ public class MyFileController {
 	@GetMapping(path = "/images/{fileName}", produces = IMAGE_JPEG_VALUE)
 	public byte[] getImageFile(@PathVariable("fileName") String fileName) throws IOException, NoSuchFileException {
 
+		System.out.println(System.getProperty("user.home"));
 		return Files.readAllBytes(Paths.get(FileConstant.IMAGE_FOLDER + fileName));
 	}
 	

@@ -50,7 +50,6 @@ public final class ImageFileService implements FileService {
 //		int index = URIString.indexOf("file:");
 //
 //		Path imageFolder = Paths.get(URIString.substring(URIString.indexOf("jar:") == 0 ? index + 5 : index + 6));
-//		System.out.println(imageFolder);
 		
 		Path imageFolder = Paths.get(FileConstant.IMAGE_FOLDER).toAbsolutePath().normalize();
 		
